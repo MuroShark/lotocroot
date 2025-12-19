@@ -42,14 +42,6 @@ const getCSP = () => {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export', // <--- ВОТ ЭТОЙ СТРОЧКИ НЕ ХВАТАЛО. Она создаст папку 'out'
-  
-  // Для статического сайта нужно отключить оптимизацию картинок (Next Image),
-  // так как нет сервера, который бы их сжимал на лету.
-  images: {
-    unoptimized: true,
-  },
-
   // Headers will be handled by withSentryConfig
   turbopack: {
     root: __dirname,
