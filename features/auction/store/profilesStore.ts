@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { v4 as uuidv4 } from 'uuid';
 import { useLotsStore, type Lot } from '@/entities/lot/model/store/lotsStore';
 
@@ -96,6 +96,14 @@ export const useProfilesStore = create<ProfilesState>()(persist(
   }),
   {
     name: 'rouletta-profiles-storage',
+    storage: createJSONStorage(() => {
+      if (typeof window !== 'undefined') return localStorage;
+      return {
+        getItem: () => null,
+        setItem: () => {},
+        removeItem: () => {},
+      };
+    }),
   }
 ));
 

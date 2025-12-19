@@ -1,7 +1,6 @@
 import { create } from 'zustand';
-import { persist, subscribeWithSelector } from 'zustand/middleware';
+import { persist, subscribeWithSelector, createJSONStorage } from 'zustand/middleware';
 import { createSelector } from 'reselect';
-import { safeLocalStorage } from '@/shared/lib/storage';
 import type { Lot as LotType } from '../types';
 
 export interface LotsState {
@@ -181,7 +180,15 @@ export const useLotsStore = create<LotsState>()(subscribeWithSelector(persist(
   }),
   {
     name: 'rouletta-lots-storage',
-    storage: safeLocalStorage,
+    // Используем createJSONStorage с проверкой window для корректной работы в SSR (Next.js)
+    storage: createJSONStorage(() => {
+      if (typeof window !== 'undefined') return localStorage;
+      return {
+        getItem: () => null,
+        setItem: () => {},
+        removeItem: () => {},
+      };
+    }),
   }
 )));
 
