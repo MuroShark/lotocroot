@@ -9,7 +9,7 @@ import { GlobalTimerController } from "@/features/auction/components/Timer/Globa
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
-  variable: "--font-inter",
+  variable: "--font-sans",
 });
 
 const jetbrainsMono = JetBrains_Mono({
@@ -39,14 +39,14 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru" className={`${inter.variable} ${jetbrainsMono.variable}`}>
-      <head>
-        {/* Подключаем Phosphor Icons как в примере HTML */}
+      <head />
+      <body className="antialiased">
+        {/* Подключаем Phosphor Icons. Script лучше размещать в body для корректной работы оптимизаций Next.js */}
         <Script 
           src="https://unpkg.com/@phosphor-icons/web" 
           strategy="lazyOnload" 
         />
-      </head>
-      <body className="antialiased">
+
         {/* Заглушка для мобильных устройств (видна только на экранах < md) */}
         <div className="flex h-screen w-full flex-col items-center justify-center bg-[var(--bg-body)] p-6 md:hidden">
           <div className="flex flex-col items-center justify-center py-10 px-6 border border-dashed border-[#27272a] rounded-xl bg-white/5 w-full max-w-sm animate-fade-slide">

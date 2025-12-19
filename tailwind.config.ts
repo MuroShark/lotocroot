@@ -14,6 +14,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)"],
+        mono: ["var(--font-mono)"],
         lubrifont: ['var(--font-wdxl-lubrifont)'], // Прямое указание имени шрифта
       },
       keyframes: {
