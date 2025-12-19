@@ -1,0 +1,1 @@
+export const EMPTY_LOT_CONTENT = 'Пустой лот';

@@ -1,0 +1,1 @@
+export { useDonationsStore } from '@/entities/donation/model/store/donationsStore';
