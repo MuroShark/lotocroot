@@ -10,6 +10,15 @@ interface Rates {
   [key: string]: number; // e.g. { 'USD': 92.50, 'EUR': 100.20 }
 }
 
+export const DEFAULT_CURRENCY_STATE = {
+  baseCurrency: 'RUB' as CurrencyCode,
+  rateSource: 'auto' as RateSource,
+  donationDisplayMode: 'converted' as DonationDisplayMode,
+  customRates: {},
+  autoRates: {}, // Не сохраняется, но нужно для сброса
+  lastUpdated: null, // Не сохраняется, но нужно для сброса
+};
+
 interface CurrencyState {
   baseCurrency: CurrencyCode;
   rateSource: RateSource;
@@ -22,20 +31,20 @@ interface CurrencyState {
   setCustomRate: (currency: CurrencyCode, rate: number) => void;
   setDonationDisplayMode: (mode: DonationDisplayMode) => void;
   fetchRates: () => Promise<void>;
+  setBulkSettings: (settings: Partial<CurrencyState>) => void;
+  resetCurrencySettings: () => void;
 }
 
 const CBR_API_URL = 'https://www.cbr-xml-daily.ru/daily_json.js';
 
 export const useCurrencyStore = create<CurrencyState>()(persist(
   (set, get) => ({
-    baseCurrency: 'RUB',
-    rateSource: 'auto',
-    autoRates: {},
-    customRates: {},
-    lastUpdated: null,
-    donationDisplayMode: 'original',
+    ...DEFAULT_CURRENCY_STATE,
 
-    setBaseCurrency: (currency) => set({ baseCurrency: currency }),
+    setBaseCurrency: (currency) => {
+      if (currency !== 'RUB') return; // Технический запрет на смену валюты
+      set({ baseCurrency: currency });
+    },
     setRateSource: (source) => set({ rateSource: source }),
     setCustomRate: (currency, rate) => set(state => ({
       customRates: { ...state.customRates, [currency]: rate }
@@ -73,9 +82,19 @@ export const useCurrencyStore = create<CurrencyState>()(persist(
         // В случае ошибки можно оставить старые курсы, если они есть
       }
     },
+
+    setBulkSettings: (settings) => set((state) => ({ ...state, ...settings })),
+    resetCurrencySettings: () => set(DEFAULT_CURRENCY_STATE),
   }),
   {
     name: 'rouletta-currency-storage',
     storage: safeLocalStorage,
+    // Сохраняем только те настройки, которые вводит пользователь
+    partialize: (state) => ({
+      baseCurrency: state.baseCurrency,
+      rateSource: state.rateSource,
+      customRates: state.customRates,
+      donationDisplayMode: state.donationDisplayMode,
+    }),
   }
 ));

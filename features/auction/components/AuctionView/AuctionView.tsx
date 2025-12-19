@@ -31,8 +31,8 @@ export const AuctionView = memo(() => {
   const {
     isRulesOpen, toggleRulesPanel,
     isIncomingOpen, toggleIncomingPanel, setIncomingOpen,
-    addTimeOnNewDonation, newDonationTimeToAdd, addTimeOnNewLot, newLotTimeToAdd,
-    preventTimeAddWhenOver, preventTimeAddThreshold, isMinBidEnabled, minBidAmount,
+    addTimeOnNewLot, newLotTimeToAdd,
+    preventTimeAddWhenOver, preventTimeAddThreshold,
     addTimeOnLeaderChange, leaderChangeTimeToAdd
   } = useAuctionViewStore();
   
@@ -43,12 +43,38 @@ export const AuctionView = memo(() => {
   const { setDpAuth } = useAuthStore();
   const [isDpWizardOpen, setIsDpWizardOpen] = useState(false);
 
-  const prevDonations = usePrevious(donations);
   const prevLots = usePrevious(lots);
 
   // Хранилище порядка лотов (ID в порядке убывания суммы)
   const lastSortedIdsStringRef = useRef<string>("");
   const isFirstRunRef = useRef(true);
+
+  // --- ГИДРАТАЦИЯ ---
+  const [isHydrated, setIsHydrated] = useState(false);
+  useEffect(() => {
+    const unsubscribe = useLotsStore.persist.onFinishHydration(() => setIsHydrated(true));
+    if (useLotsStore.persist.hasHydrated()) {
+      setTimeout(() => setIsHydrated(true), 0);
+    }
+    return unsubscribe;
+  }, []);
+
+
+  // --- ЛОГИКА АДАПТИВНОСТИ (ResizeObserver) ---
+  const headerRef = useRef<HTMLDivElement>(null);
+  const [isHeaderCompact, setIsHeaderCompact] = useState(false);
+
+  useEffect(() => {
+    if (!headerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        // Если ширина хедера меньше 1000px, включаем компактный режим
+        setIsHeaderCompact(entry.contentRect.width < 1000);
+      }
+    });
+    observer.observe(headerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const handleDpConnect = (apiKey: string, region: Region) => {
     setDpAuth(true, apiKey, region);
@@ -56,8 +82,9 @@ export const AuctionView = memo(() => {
   };
 
   const timerSlot = useMemo(() => <Timer />, []);
-  const totalAmountSlot = useMemo(() => <TotalAmount />, []);
-  const integrationsSlot = useMemo(() => <IntegrationsManager onOpenDpWizard={() => setIsDpWizardOpen(true)} />, []);
+  // Передаем isCompact в компоненты. Добавляем зависимость [isHeaderCompact]
+  const totalAmountSlot = useMemo(() => <TotalAmount isCompact={isHeaderCompact} />, [isHeaderCompact]);
+  const integrationsSlot = useMemo(() => <IntegrationsManager onOpenDpWizard={() => setIsDpWizardOpen(true)} isCompact={isHeaderCompact} />, [isHeaderCompact]);
 
   // Инициализация "отпечатка" списка при загрузке
   useEffect(() => {
@@ -85,7 +112,8 @@ export const AuctionView = memo(() => {
 
   // Эффект: Новый лот
   useEffect(() => {
-    if (prevLots && addTimeOnNewLot && newLotTimeToAdd > 0) {
+    // Ждем гидратации, чтобы не добавлять время при загрузке страницы
+    if (isHydrated && prevLots && addTimeOnNewLot && newLotTimeToAdd > 0) {
       const newLots = lots.filter(l => !prevLots.some(pl => pl.id === l.id));
       if (newLots.length > 0) {
          if (preventTimeAddWhenOver) {
@@ -95,7 +123,7 @@ export const AuctionView = memo(() => {
          timerControls.addTime(newLots.length * newLotTimeToAdd * 1000);
       }
     }
-  }, [lots, prevLots, addTimeOnNewLot, newLotTimeToAdd, preventTimeAddWhenOver, preventTimeAddThreshold]);
+  }, [lots, prevLots, addTimeOnNewLot, newLotTimeToAdd, preventTimeAddWhenOver, preventTimeAddThreshold, isHydrated]);
 
   // Эффект: Смена лидера
   useEffect(() => {
@@ -115,7 +143,8 @@ export const AuctionView = memo(() => {
     const currentSortedIdsString = sortedLots.map(l => l.id).join(',');
     lastSortedIdsStringRef.current = currentSortedIdsString;
 
-    if (isFirstRunRef.current || !addTimeOnLeaderChange) return;
+    // Добавляем проверку isHydrated
+    if (!isHydrated || isFirstRunRef.current || !addTimeOnLeaderChange) return;
 
     // 5. Проверка: лидер изменился?
     if (prevLeaderId !== null && currentLeaderId !== null && prevLeaderId !== currentLeaderId) {
@@ -136,7 +165,8 @@ export const AuctionView = memo(() => {
     addTimeOnLeaderChange, 
     leaderChangeTimeToAdd, 
     preventTimeAddWhenOver,     // Не забудьте добавить в зависимости
-    preventTimeAddThreshold     // Не забудьте добавить в зависимости
+    preventTimeAddThreshold,    // Не забудьте добавить в зависимости
+    isHydrated
   ]);
 
   return (
@@ -168,11 +198,14 @@ export const AuctionView = memo(() => {
           <span>Входящие</span>
         </div>
 
-        <AuctionHeader
-          leftSlot={timerSlot}
-          centerSlot={totalAmountSlot}
-          rightSlot={integrationsSlot}
-        />
+        {/* Оборачиваем хедер в div с ref для измерения ширины */}
+        <div ref={headerRef} className="w-full shrink-0">
+          <AuctionHeader
+            leftSlot={timerSlot}
+            centerSlot={totalAmountSlot}
+            rightSlot={integrationsSlot}
+          />
+        </div>
 
         <div className="flex flex-1 flex-col overflow-hidden relative">
           <LotManager />

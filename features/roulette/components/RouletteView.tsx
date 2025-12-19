@@ -47,10 +47,9 @@ export const RouletteView: React.FC = () => {
         <WheelCanvas 
             canvasRef={controller.canvasRef}
             wrapperRef={controller.wrapperRef}
+            pointerRef={controller.pointerRef} 
             isSpinning={controller.isSpinning}
-            pointerText={controller.pointerText}
             isPointerEliminated={controller.isPointerEliminated}
-            // Передаем состояние оверлея
             eliminationState={controller.eliminationState}
         />
 

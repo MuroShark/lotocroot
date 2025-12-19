@@ -3,6 +3,7 @@
 import React from 'react';
 import { TemplateSelector } from './components/TemplateSelector';
 import { useAuctionViewStore } from '@/features/auction/store/auctionViewStore';
+import { useCurrencyStore } from '@/features/settings/model/currencyStore';
 
 export type SettingsTabId = 'general' | 'integrations' | 'appearance';
 
@@ -28,7 +29,13 @@ export const SettingsLayout: React.FC<SettingsLayoutProps> = ({
 
   // Получаем функцию сброса из стора
   const resetViewSettings = useAuctionViewStore((state) => state.resetViewSettings);
+  const resetCurrencySettings = useCurrencyStore((state) => state.resetCurrencySettings);
 
+  // Создаем общий обработчик сброса
+  const handleResetAll = () => {
+    resetViewSettings();
+    resetCurrencySettings();
+  };
   return (
     <div className="flex flex-col h-full bg-[#09090b] relative">
       
@@ -68,7 +75,7 @@ export const SettingsLayout: React.FC<SettingsLayoutProps> = ({
       <div className="h-[60px] bg-[#09090b]/80 border-t border-[#27272a] flex items-center justify-between px-10 shrink-0 backdrop-blur-md">
         <button 
           className="flex items-center gap-2 px-4 py-2 rounded-md text-xs font-semibold text-[#71717a] border border-[#333] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
-          onClick={resetViewSettings}
+          onClick={handleResetAll}
         >
           <i className="ph-bold ph-arrow-counter-clockwise"></i> Сбросить настройки
         </button>

@@ -19,7 +19,21 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "LotoCroot",
-  description: "DonationAlerts Rouletta",
+  description: "Интерактивный аукцион и Колесо Удачи для стримеров с интеграцией DonationAlerts, Twitch и DonatePay. Удобное управление лотами, таймер и автоматическое продление времени.",
+  keywords: ["PointAuc", "ПоинтАук", "аукцион для стримеров", "рулетка", "колесо удачи", "DonationAlerts", "Twitch", "DonatePay", "интерактив", "сбор средств", "LotoCroot", "альтернатива pointauc"],
+  authors: [{ name: "MuroShark" }],
+  creator: "MuroShark",
+  openGraph: {
+    title: "LotoCroot — Аукцион и Колесо Удачи",
+    description: "Бесплатный инструмент для стримеров: аукцион, рулетка, интеграции с DonationAlerts и Twitch. Настраиваемый таймер и удобное управление.",
+    type: "website",
+    locale: "ru_RU",
+    siteName: "LotoCroot",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -33,11 +47,31 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="antialiased">
+        {/* Заглушка для мобильных устройств (видна только на экранах < md) */}
+        <div className="flex h-screen w-full flex-col items-center justify-center bg-[var(--bg-body)] p-6 md:hidden">
+          <div className="flex flex-col items-center justify-center py-10 px-6 border border-dashed border-[#27272a] rounded-xl bg-white/5 w-full max-w-sm animate-fade-slide">
+            <div className="bg-[#ef4444]/10 text-[#ef4444] px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider mb-5 border border-[#ef4444]/20">
+              Desktop Only
+            </div>
+            
+            <i className="ph-duotone ph-desktop text-5xl text-[#ef4444]/80 mb-5 drop-shadow-[0_0_10px_rgba(239,68,68,0.3)]"></i>
+            
+            <div className="text-lg font-bold text-[var(--text-main)] mb-2 text-center">
+              Устройство не поддерживается
+            </div>
+            
+            <div className="text-[13px] text-[var(--text-muted)] text-center leading-relaxed">
+              Для работы с аукционом, пожалуйста, перейдите на планшет, ноутбук или ПК.
+            </div>
+          </div>
+        </div>
+
         {/* Основной контейнер, имитирующий body { display: flex } из CSS */}
         {/* Глобальный контроллер таймера, который не рендерит UI, но управляет логикой */}
         <GlobalTimerController />
 
-        <div className="flex h-screen w-full overflow-hidden text-[var(--text-main)]">
+        {/* Скрываем основной контент на мобильных (hidden md:flex) */}
+        <div className="hidden md:flex h-screen w-full overflow-hidden text-[var(--text-main)]">
           
           {/* Сайдбар слева (фиксированный) */}
           <SideNav />

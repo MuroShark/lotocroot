@@ -41,6 +41,7 @@ interface ServiceRowProps {
   isConnecting?: boolean;
   connectingText?: string; // Новый проп для кастомного текста
   isLoggingIn?: boolean;
+  isDisabled?: boolean;
   onToggle: () => void;
   onLogin: () => void;
   invertIconOnActive?: boolean;
@@ -60,6 +61,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
   isConnecting,
   connectingText = 'Подключение...', // По умолчанию "Подключение..."
   isLoggingIn,
+  isDisabled,
   onToggle,
   onLogin,
   invertIconOnActive = true,
@@ -67,6 +69,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
 }) => {
   
   const getStatusText = () => {
+    if (isDisabled) return 'В разработке';
     // Используем переданный текст или дефолтный
     if (isConnecting) return connectingText;
     if (!isAuthorized) return 'Требуется вход';
@@ -112,17 +115,17 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
           checked={isEnabled} 
           onChange={onToggle} 
           isConnecting={isConnecting}
-          disabled={isConnecting}
+          disabled={isConnecting || isDisabled}
         />
       ) : (
         <button 
           onClick={onLogin}
-          disabled={isLoggingIn}
+          disabled={isLoggingIn || isDisabled}
           className={`
             relative h-7 cursor-pointer rounded border border-[var(--border-color)] bg-transparent px-3 text-[11px] font-bold uppercase tracking-wider text-[var(--primary)] 
             transition-all duration-200 
             hover:border-[var(--primary)] hover:bg-[var(--primary)] hover:text-white hover:shadow-[0_2px_8px_rgba(145,71,255,0.3)]
-            disabled:cursor-wait disabled:opacity-80
+            ${isDisabled ? 'disabled:cursor-not-allowed disabled:opacity-50' : 'disabled:cursor-wait disabled:opacity-80'}
             ${isLoggingIn ? 'text-transparent' : ''}
           `}
         >
@@ -141,11 +144,12 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
 // --- Основной компонент ---
 interface IntegrationsManagerProps {
   onOpenDpWizard: () => void;
+  isCompact?: boolean;
 }
 
-const IntegrationsManagerComponent: React.FC<IntegrationsManagerProps> = ({ onOpenDpWizard }) => {
+const IntegrationsManagerComponent: React.FC<IntegrationsManagerProps> = ({ onOpenDpWizard, isCompact = false }) => {
   // DonationAlerts
-  const { isAuthenticated, login, logout, isLoggingIn, isTokenExchanging } = useDonationAlertsAuth();
+  const { isAuthenticated, login, isLoggingIn, isTokenExchanging } = useDonationAlertsAuth();
   const { connectionStatus: daStatus, connect: connectDA, disconnect: disconnectDA, isConnecting: isConnectingDA } = useDonationAlertsSocket();
 
   // DonatePay
@@ -258,7 +262,7 @@ const IntegrationsManagerComponent: React.FC<IntegrationsManagerProps> = ({ onOp
           `} />
         </div>
         
-        <span className="text-[12px] font-semibold uppercase tracking-wider">Connections</span>
+        {!isCompact && <span className="hidden md:inline text-[12px] font-semibold uppercase tracking-wider">Connections</span>}
         
         <span className={`
           flex h-5 min-w-[20px] items-center justify-center rounded px-1.5 font-mono text-[10px] font-bold transition-colors duration-200
@@ -287,6 +291,7 @@ const IntegrationsManagerComponent: React.FC<IntegrationsManagerProps> = ({ onOp
             connectingText="Подключение..."
             onToggle={handleTwitchToggle}
             onLogin={loginTwitch}
+            isDisabled={true}
             brandClasses={{
               bg: 'bg-[#a970ff]/15',
               text: 'text-[#a970ff]',

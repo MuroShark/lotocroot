@@ -8,6 +8,7 @@ import { DonatePayWizardModal, Region } from "../components/DonatePayWizardModal
 import { CurrencyGrid } from "../components/CurrencyGrid";
 import { CurrencyCode, RateSource, useCurrencyStore, DonationDisplayMode } from "../../model/currencyStore";
 import { IntegrationCard } from "../components/IntegrationCard";
+import { CustomSelect } from "../components/CustomSelect";
 
 export const IntegrationsSettings = () => {
   // --- DonationAlerts ---
@@ -60,6 +61,13 @@ export const IntegrationsSettings = () => {
     fetchRates();
   }, [fetchRates]);
 
+  // Принудительно устанавливаем RUB, если выбрано что-то другое
+  useEffect(() => {
+    if (baseCurrency !== 'RUB') {
+      setBaseCurrency('RUB');
+    }
+  }, [baseCurrency, setBaseCurrency]);
+
   const handleDpConnect = (apiKey: string, region: Region) => {
     setDpAuth(true, apiKey, region);
   };
@@ -82,13 +90,14 @@ export const IntegrationsSettings = () => {
           {/* TWITCH CARD (Обновлено) */}
           <IntegrationCard 
             type="twitch" 
-            name="Twitch" 
+            name="Twitch (Скоро)" 
             // Меняем статус и действия на реальные из хука
-            status={isTwitchAuthenticated ? 'Подключено' : 'Не подключено'} 
+            status={'В разработке'} 
             connected={isTwitchAuthenticated}
             isLoggingIn={isTwitchLoggingIn}
             onConnect={loginTwitch}
             onDisconnect={logoutTwitch}
+            isDisabled={true}
           />
 
           <IntegrationCard 
@@ -136,14 +145,14 @@ export const IntegrationsSettings = () => {
                 </span>
              </span>
              
-             <select 
+             <CustomSelect 
                value={donationDisplayMode}
-               onChange={(e) => setDonationDisplayMode(e.target.value as DonationDisplayMode)}
-               className="bg-[#202024] border border-[#333] text-white px-2 h-9 rounded-md text-[13px] focus:border-[#9147ff] focus:outline-none cursor-pointer"
-             >
-                <option value="original">Оригинальная</option>
-                <option value="converted">Конвертировать</option>
-             </select>
+               onChange={(val) => setDonationDisplayMode(val as DonationDisplayMode)}
+               options={[
+                  { value: 'converted', label: 'Конвертировать' },
+                  { value: 'original', label: 'Оригинальная' }
+               ]}
+             />
            </div>
            
            <div className="flex flex-col gap-2">
@@ -154,27 +163,24 @@ export const IntegrationsSettings = () => {
                 </span>
              </span>
 
-             <select 
+             <CustomSelect 
                value={baseCurrency}
-               onChange={(e) => setBaseCurrency(e.target.value as CurrencyCode)}
-               className="bg-[#202024] border border-[#333] text-white px-2 h-9 rounded-md text-[13px] focus:border-[#9147ff] focus:outline-none cursor-pointer"
-             >
-                <option value="RUB">Российский рубль (RUB)</option>
-                <option value="USD">Доллар США (USD)</option>
-                <option value="EUR">Евро (EUR)</option>
-             </select>
+               disabled={true}
+               onChange={(val) => setBaseCurrency(val as CurrencyCode)}
+               options={[{ value: 'RUB', label: 'Российский рубль (RUB)' }]}
+             />
            </div>
 
            <div className="flex flex-col gap-2">
              <label className="text-[13px] font-medium text-[#ccc]">Курс валют</label>
-             <select 
+             <CustomSelect 
                value={rateSource}
-               onChange={(e) => setRateSource(e.target.value as RateSource)}
-               className="bg-[#202024] border border-[#333] text-white px-2 h-9 rounded-md text-[13px] focus:border-[#9147ff] focus:outline-none cursor-pointer"
-             >
-                <option value="auto">Авто (ЦБ РФ)</option>
-                <option value="custom">Свой курс</option>
-             </select>
+               onChange={(val) => setRateSource(val as RateSource)}
+               options={[
+                  { value: 'auto', label: 'Авто (ЦБ РФ)' },
+                  { value: 'custom', label: 'Свой курс' }
+               ]}
+             />
            </div>
         </div>
 

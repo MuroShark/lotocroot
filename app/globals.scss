@@ -87,6 +87,7 @@
   /* Firefox */
   input[type="number"] {
     -moz-appearance: textfield;
+    appearance: textfield;
   }
 }
 
@@ -99,7 +100,7 @@
   will-change: width;
   flex-shrink: 0;
   position: relative;
-  z-index: 30;
+  z-index: 60;
   backdrop-filter: blur(12px);
   border-color: transparent; 
 }

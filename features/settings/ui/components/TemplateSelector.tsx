@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 // Импортируем дефолтное состояние
 import { useAuctionViewStore, DEFAULT_AUCTION_STATE } from "@/features/auction/store/auctionViewStore";
-import { useCurrencyStore } from "../../model/currencyStore";
+import { useCurrencyStore, DEFAULT_CURRENCY_STATE } from "../../model/currencyStore";
 
 type Template = {
   id: string;
@@ -91,7 +91,7 @@ export const TemplateSelector = () => {
         setSelectedId('default'); 
         // При удалении активного шаблона также сбрасываем на дефолт
         setAuctionBulk(DEFAULT_AUCTION_STATE);
-        // Если есть дефолтные валюты: setCurrencyBulk(DEFAULT_CURRENCY_STATE);
+        if (setCurrencyBulk) setCurrencyBulk(DEFAULT_CURRENCY_STATE);
       }
     }
   };
@@ -128,8 +128,7 @@ export const TemplateSelector = () => {
         // предотвращая баг с возвратом к старым настройкам.
         setAuctionBulk(DEFAULT_AUCTION_STATE);
         
-        // ВНИМАНИЕ: Если у вас есть DEFAULT_CURRENCY_STATE, раскомментируйте:
-        // if (setCurrencyBulk) setCurrencyBulk(DEFAULT_CURRENCY_STATE);
+        if (setCurrencyBulk) setCurrencyBulk(DEFAULT_CURRENCY_STATE);
     }
   };
 

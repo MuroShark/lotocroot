@@ -34,6 +34,10 @@ export const RulesPanel: React.FC = () => {
   const [fontSize, setFontSize] = useState(14);
   const savedRange = useRef<Range | null>(null);
 
+  // Используем ref для title, чтобы не пересоздавать слушатель событий при каждом нажатии клавиши
+  const titleRef = useRef(title);
+  useEffect(() => { titleRef.current = title; }, [title]);
+
   // --- CLICK LISTENERS ---
   useEffect(() => {
     function handleGlobalClick(event: MouseEvent) {
@@ -50,7 +54,7 @@ export const RulesPanel: React.FC = () => {
         if (contentRef.current) {
             localStorage.setItem('auction_rules_current', JSON.stringify({
                 content: contentRef.current.innerHTML,
-                title: title
+                title: titleRef.current // Используем ref
             }));
         }
       }
@@ -60,7 +64,7 @@ export const RulesPanel: React.FC = () => {
     return () => {
       document.removeEventListener("mousedown", handleGlobalClick);
     };
-  }, [isEditing, isPresetMenuOpen, title]);
+  }, [isEditing, isPresetMenuOpen]); // title убран из зависимостей
 
 
   // --- INIT DATA (ЗДЕСЬ ВСТАВЛЕН НОВЫЙ ШАБЛОН) ---

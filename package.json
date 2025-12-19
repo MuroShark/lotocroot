@@ -2,6 +2,14 @@
   "name": "lotocroot",
   "version": "0.1.0",
   "private": true,
+  "browserslist": [
+    "chrome >= 80",
+    "firefox >= 78",
+    "edge >= 80",
+    "safari >= 13",
+    "ios >= 13",
+    "not ie 11"
+  ],
   "scripts": {
     "dev": "next dev",
     "dev2": "node --trace-deprecation node_modules/next/dist/bin/next dev",

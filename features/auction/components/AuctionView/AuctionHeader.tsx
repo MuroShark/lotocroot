@@ -8,19 +8,19 @@ interface AuctionHeaderProps {
 
 const AuctionHeaderComponent = ({ leftSlot, centerSlot, rightSlot }: AuctionHeaderProps) => {
   return (
-    <header className="relative z-50 flex h-[70px] shrink-0 items-center justify-between border-b border-[#27272a] bg-[rgba(17,17,19,0.75)] px-6 backdrop-blur-md">
+    <header className="relative z-50 grid grid-cols-[auto_1fr_auto] gap-4 h-[70px] shrink-0 items-center border-b border-[#27272a] bg-[rgba(17,17,19,0.75)] px-6 backdrop-blur-md">
       {/* LEFT: Timer */}
-      <div className="flex flex-1 items-center justify-start">
+      <div className="flex items-center justify-start">
         {leftSlot}
       </div>
 
       {/* CENTER: Bank */}
-      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+      <div className="flex items-center justify-center">
          {centerSlot}
       </div>
 
       {/* RIGHT: Integrations */}
-      <div className="flex flex-1 items-center justify-end">
+      <div className="flex items-center justify-end">
          {rightSlot}
       </div>
     </header>

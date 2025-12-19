@@ -13,6 +13,7 @@ interface IntegrationCardProps {
   hasError?: boolean;
   onConnect?: () => void;
   onDisconnect?: () => void;
+  isDisabled?: boolean;
 }
 
 const THEMES: Record<IntegrationType, { icon: string; color: string; bg: string }> = {
@@ -42,7 +43,8 @@ export const IntegrationCard: React.FC<IntegrationCardProps> = ({
   hasError,
   isLoggingIn,
   onConnect,
-  onDisconnect
+  onDisconnect,
+  isDisabled
 }) => {
   const theme = THEMES[type];
 
@@ -84,7 +86,7 @@ export const IntegrationCard: React.FC<IntegrationCardProps> = ({
       {/* Кнопка действия */}
       <button 
         onClick={connected ? onDisconnect : onConnect} 
-        disabled={isLoggingIn}
+        disabled={isLoggingIn || isDisabled}
         // Добавлен cursor-pointer
         className={`
           relative px-2 py-1 rounded border text-[10px] font-semibold transition-colors cursor-pointer group
@@ -94,7 +96,7 @@ export const IntegrationCard: React.FC<IntegrationCardProps> = ({
             ? 'border-[#27272a] text-[#71717a] hover:text-[#ef4444] hover:border-[#ef4444]/50'
             : `border-[#333] text-[#e4e4e7] hover:bg-[#333] ${!isLoggingIn && 'hover:text-white'}`
           }
-          disabled:cursor-wait disabled:opacity-70
+          ${isDisabled ? 'disabled:cursor-not-allowed disabled:opacity-50' : 'disabled:cursor-wait disabled:opacity-70'}
           ${isLoggingIn ? 'text-transparent' : ''}
         `}
       >
