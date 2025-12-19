@@ -42,6 +42,14 @@ const getCSP = () => {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export', // <--- ВОТ ЭТОЙ СТРОЧКИ НЕ ХВАТАЛО. Она создаст папку 'out'
+  
+  // Для статического сайта нужно отключить оптимизацию картинок (Next Image),
+  // так как нет сервера, который бы их сжимал на лету.
+  images: {
+    unoptimized: true,
+  },
+
   // Headers will be handled by withSentryConfig
   turbopack: {
     root: __dirname,
@@ -52,6 +60,7 @@ module.exports = nextConfig;
 
 // Injected content via Sentry wizard below
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { withSentryConfig } = require("@sentry/nextjs");
 
 module.exports = withSentryConfig(
