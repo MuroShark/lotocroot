@@ -250,7 +250,7 @@ const IntegrationsManagerComponent: React.FC<IntegrationsManagerProps> = ({ onOp
           group flex h-10 cursor-pointer items-center gap-2.5 rounded-lg border bg-[#202024] px-3.5 py-2 transition-all duration-200
           ${hasActive 
             ? 'border-[var(--primary)] bg-[rgba(145,71,255,0.08)] text-white' 
-            : 'border-[#333] text-[#71717a] hover:border-[#555] hover:text-white'
+            : 'border-[#333] text-[#a1a1aa] hover:border-[#555] hover:text-white'
           }
         `}
       >

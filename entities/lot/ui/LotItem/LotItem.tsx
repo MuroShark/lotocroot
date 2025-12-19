@@ -235,11 +235,11 @@ export const LotItem: React.FC<LotItemProps> = memo(({
         
         {/* Левая часть (Номер, ID, Название) */}
         <div className="flex min-w-0 flex-1 items-center gap-3 h-full">
-          <span className="flex w-6 shrink-0 items-center justify-center font-mono text-xs text-[#555]">
+          <span className="flex w-6 shrink-0 items-center justify-center font-mono text-xs text-[#a1a1aa]">
             {displayNumber}.
           </span>
         <div className="flex w-[48px] shrink-0 items-center justify-center">
-          <span className="flex min-w-[28px] items-center justify-center rounded bg-[rgba(145,71,255,0.15)] px-1.5 py-0.5 font-mono text-[11px] text-[#9147ff]">
+          <span className="flex min-w-[28px] items-center justify-center rounded bg-[rgba(145,71,255,0.15)] px-1.5 py-0.5 font-mono text-[11px] text-[#c4b5fd]">
             #{lot.id}
           </span>
         </div>
