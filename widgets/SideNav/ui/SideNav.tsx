@@ -44,6 +44,29 @@ export const SideNav: React.FC<SideNavProps> = ({ className }) => {
       <Link href="/settings" className={getNavClass('/settings')} title="Настройки">
         <i className="ph ph-gear text-[22px]"></i>
       </Link>
+
+      {/* Внешние ссылки */}
+      <div className="mt-auto flex flex-col items-center">
+        <Link 
+          href="https://github.com/MuroShark/lotocroot/issues" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className={getNavClass('bug-report')} 
+          title="Сообщить о баге"
+        >
+          <i className="ph ph-bug text-[22px]"></i>
+        </Link>
+
+        <Link 
+          href="https://github.com/MuroShark" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className={getNavClass('github')} 
+          title="GitHub"
+        >
+          <i className="ph ph-github-logo text-[22px]"></i>
+        </Link>
+      </div>
     </nav>
   );
 };
