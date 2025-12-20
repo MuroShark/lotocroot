@@ -6,6 +6,7 @@ import { SideNav } from "@/widgets/SideNav";
 import { Toaster } from "@/shared/ui/Toast/Toaster";
 import { DonationDragLayer } from "@/features/auction/widgets/DonationManager/ui/DonationList/DonationDragLayer";
 import { GlobalTimerController } from "@/features/auction/components/Timer/GlobalTimerController";
+import { Desktop } from "@phosphor-icons/react/dist/ssr";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -41,12 +42,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ru" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <head />
       <body className="antialiased">
-        {/* Подключаем Phosphor Icons. Script лучше размещать в body для корректной работы оптимизаций Next.js */}
-        <Script 
-          src="https://unpkg.com/@phosphor-icons/web" 
-          strategy="lazyOnload" 
-        />
-
         {/* Заглушка для мобильных устройств (видна только на экранах < md) */}
         <div className="flex h-screen w-full flex-col items-center justify-center bg-[var(--bg-body)] p-6 md:hidden">
           <div className="flex flex-col items-center justify-center py-10 px-6 border border-dashed border-[#27272a] rounded-xl bg-white/5 w-full max-w-sm animate-fade-slide">
@@ -54,7 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               Desktop Only
             </div>
             
-            <i className="ph-duotone ph-desktop text-5xl text-[#ef4444]/80 mb-5 drop-shadow-[0_0_10px_rgba(239,68,68,0.3)]"></i>
+            <Desktop size={48} weight="duotone" className="text-[#ef4444]/80 mb-5 drop-shadow-[0_0_10px_rgba(239,68,68,0.3)]" />
             
             <div className="text-lg font-bold text-[var(--text-main)] mb-2 text-center">
               Устройство не поддерживается

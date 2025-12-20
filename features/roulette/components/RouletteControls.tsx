@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GameMode, EliminationMode } from '../types';
+import { GameController, Info, ArrowsClockwise } from '@phosphor-icons/react';
 
 interface RouletteControlsProps {
     mode: GameMode;
@@ -65,7 +66,7 @@ export const RouletteControls: React.FC<RouletteControlsProps> = ({
             {/* Header */}
             <div className="p-5 border-b border-[var(--border-color)]">
                 <div className="text-lg font-bold text-white mb-1 flex items-center gap-2">
-                    <i className="ph-fill ph-game-controller"></i> Колесо удачи
+                    <GameController weight="fill" /> Колесо удачи
                 </div>
                 <div className="text-xs text-[var(--text-muted)]">
                     Участников: {participantsCount} • Банк: <span className="font-mono text-white">{totalBank.toLocaleString()} ₽</span>
@@ -79,7 +80,7 @@ export const RouletteControls: React.FC<RouletteControlsProps> = ({
                     
                     {mode === 'elimination' && (
                         <div className="info-wrapper">
-                            <i className="ph-fill ph-info text-[#555] hover:text-[var(--text-main)] transition-colors text-base"></i>
+                            <Info weight="fill" className="text-[#555] hover:text-[var(--text-main)] transition-colors text-base" />
                             <div className="tooltip">
                                 <div className="tooltip-header">Типы выбывания</div>
                                 <div className="tooltip-item">
@@ -152,7 +153,7 @@ export const RouletteControls: React.FC<RouletteControlsProps> = ({
                     disabled={isSpinning || participantsCount === 0 || (mode === 'elimination' && participantsCount <= 1)}
                     className="h-[60px] bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white border-none rounded-xl text-base font-bold uppercase tracking-widest cursor-pointer flex items-center justify-center gap-2.5 transition-all shadow-[0_4px_15px_rgba(145,71,255,0.3)] hover:-translate-y-0.5 hover:shadow-[0_8px_25px_rgba(145,71,255,0.5)] active:translate-y-[1px] disabled:bg-[#333] disabled:text-[#777] disabled:cursor-not-allowed disabled:shadow-none disabled:transform-none"
                 >
-                   <i className={`ph-bold ph-arrows-clockwise ${isSpinning ? 'animate-spin' : ''}`}></i> 
+                   <ArrowsClockwise weight="bold" className={isSpinning ? 'animate-spin' : ''} /> 
                    {isSpinning ? 'Крутим...' : 'Крутить колесо'}
                 </button>
                 <div className="flex gap-3">

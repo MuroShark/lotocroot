@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, FC, useEffect } from 'react';
+import { Check, X, CheckCircle, WarningCircle, ArrowSquareOut, Key, Eye, EyeSlash, LockKey, Spinner } from '@phosphor-icons/react';
 
 // Индикатор шагов
 const StepIndicator = ({ num, currentStep }: { num: number, currentStep: number }) => (
@@ -10,7 +11,7 @@ const StepIndicator = ({ num, currentStep }: { num: number, currentStep: number 
     ${currentStep === num ? 'bg-[#9147ff] text-white shadow-[0_0_10px_rgba(145,71,255,0.4)]' : ''}
     ${currentStep < num ? 'bg-[#333] text-[#888]' : ''}
   `}>
-    {currentStep > num ? <i className="ph-bold ph-check"></i> : num}
+    {currentStep > num ? <Check weight="bold" /> : num}
   </div>
 );
 
@@ -109,7 +110,7 @@ export const DonatePayWizardModal: FC<DonatePayWizardModalProps> = ({ isOpen, on
         <div className="flex items-center p-6 pb-2">
           <h3 className="text-[18px] font-bold text-white">Интеграция с DonatePay</h3>
           <button onClick={onClose} className="ml-auto text-[#71717a] hover:text-white transition-colors cursor-pointer">
-            <i className="ph-bold ph-x text-xl"></i>
+            <X weight="bold" className="text-xl" />
           </button>
         </div>
 
@@ -147,10 +148,7 @@ export const DonatePayWizardModal: FC<DonatePayWizardModalProps> = ({ isOpen, on
               >
                 <h4 className="font-bold text-white text-[14px] mb-1">Россия (donatepay.ru)</h4>
                 <p className="text-[11px] text-[#71717a]">Выберите, если используете donatepay.ru</p>
-                <i className={`
-                  ph-fill ph-check-circle absolute top-3 right-3 text-[#9147ff] text-xl transition-all duration-200
-                  ${selectedRegion === 'ru' ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}
-                `}></i>
+                <CheckCircle weight="fill" className={`absolute top-3 right-3 text-[#9147ff] text-xl transition-all duration-200 ${selectedRegion === 'ru' ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
               </div>
 
               {/* Region EU */}
@@ -166,10 +164,7 @@ export const DonatePayWizardModal: FC<DonatePayWizardModalProps> = ({ isOpen, on
               >
                 <h4 className="font-bold text-white text-[14px] mb-1">Европа (donatepay.eu)</h4>
                 <p className="text-[11px] text-[#71717a]">Выберите, если используете donatepay.eu</p>
-                <i className={`
-                  ph-fill ph-check-circle absolute top-3 right-3 text-[#9147ff] text-xl transition-all duration-200
-                  ${selectedRegion === 'eu' ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}
-                `}></i>
+                <CheckCircle weight="fill" className={`absolute top-3 right-3 text-[#9147ff] text-xl transition-all duration-200 ${selectedRegion === 'eu' ? 'opacity-100 scale-100' : 'opacity-0 scale-50'}`} />
               </div>
             </div>
           </div>
@@ -177,7 +172,7 @@ export const DonatePayWizardModal: FC<DonatePayWizardModalProps> = ({ isOpen, on
           {/* Step 2: API Key */}
           <div className={step === 2 ? 'block' : 'hidden'}>
             <div className="flex items-center gap-3 bg-[#ef4444]/15 border border-[#ef4444]/30 text-[#ef4444] p-3 rounded-lg mb-4">
-              <i className="ph-fill ph-warning-circle text-xl flex-shrink-0"></i>
+              <WarningCircle weight="fill" className="text-xl flex-shrink-0" />
               <p className="text-[12px] leading-snug">
                 <b>Внимание, стример!</b> Скройте экран. API ключ позволяет просматривать историю донатов и управлять уведомлениями. Не показывайте его зрителям!
               </p>
@@ -192,13 +187,13 @@ export const DonatePayWizardModal: FC<DonatePayWizardModalProps> = ({ isOpen, on
             >
               <div className="flex flex-col gap-0.5">
                 <span className="font-bold text-[#9147ff] text-[13px] flex items-center gap-1.5">
-                  Страница API <i className="ph-bold ph-arrow-square-out"></i>
+                  Страница API <ArrowSquareOut weight="bold" />
                 </span>
                 <span className="text-[11px] text-[#71717a] font-mono tracking-wide">
                   {selectedRegion === 'ru' ? 'donatepay.ru/page/api' : 'donatepay.eu/page/api'}
                 </span>
               </div>
-              <i className="ph-duotone ph-key text-2xl text-[#9147ff]/70 group-hover:text-[#9147ff] transition-colors"></i>
+              <Key weight="duotone" className="text-2xl text-[#9147ff]/70 group-hover:text-[#9147ff] transition-colors" />
             </a>
 
             <p className="text-[13px] text-[#71717a] mb-2">2. Скопируйте поле <b>&quot;Ваш API ключ&quot;</b> и вставьте его ниже:</p>
@@ -224,20 +219,20 @@ export const DonatePayWizardModal: FC<DonatePayWizardModalProps> = ({ isOpen, on
                 onClick={() => setIsKeyVisible(!isKeyVisible)}
                 className="absolute right-0 top-0 h-10 w-10 flex items-center justify-center text-[#71717a] hover:text-white transition-colors cursor-pointer"
               >
-                <i className={`ph-bold ${isKeyVisible ? 'ph-eye-slash' : 'ph-eye'}`}></i>
+                {isKeyVisible ? <EyeSlash weight="bold" /> : <Eye weight="bold" />}
               </button>
             </div>
 
             {/* Ошибка валидации */}
             {validationError && (
               <div className="mt-2 flex items-start gap-2 text-[#ef4444] text-[12px] animate-fade-in">
-                 <i className="ph-bold ph-warning-circle mt-[1px]"></i>
+                 <WarningCircle weight="bold" className="mt-[1px]" />
                  <span>{validationError}</span>
               </div>
             )}
 
             <div className="flex items-start gap-3 bg-[#10b981]/5 border border-[#10b981]/20 p-3 rounded-lg mt-4">
-              <i className="ph-bold ph-lock-key text-[#34d399] text-lg mt-0.5"></i>
+              <LockKey weight="bold" className="text-[#34d399] text-lg mt-0.5" />
               <p className="text-[12px] text-[#d1fae5] leading-snug opacity-80">
                 Ключ сохраняется <u>только в браузере</u>. Мы не имеем доступа к вашему аккаунту.
               </p>
@@ -275,7 +270,7 @@ export const DonatePayWizardModal: FC<DonatePayWizardModalProps> = ({ isOpen, on
               >
                 {isValidating ? (
                   <>
-                    <i className="ph-bold ph-spinner animate-spin"></i>
+                    <Spinner weight="bold" className="animate-spin" />
                     <span>Проверка</span>
                   </>
                 ) : (

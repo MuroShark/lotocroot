@@ -5,6 +5,7 @@ import { SettingsRow } from "../components/SettingsRow";
 import { SettingToggle } from "../components/SettingToggle";
 import { useAuctionViewStore } from "@/features/auction/store/auctionViewStore";
 import { ONE_MINUTE } from "@/features/auction/components/Timer/Timer";
+import { Clock, ArrowsDownUp, PlusCircle, Coins, Timer } from "@phosphor-icons/react";
 
 // Оборачиваем в memo, чтобы не рендерился, если пропсы не меняются (хотя тут нет пропсов, но это good practice)
 export const GeneralSettings = memo(() => {
@@ -97,7 +98,7 @@ export const GeneralSettings = memo(() => {
         focus-within:shadow-[0_0_0_1px_rgba(145,71,255,0.1)]
       ">
         <legend className="px-2 text-[#9147ff] font-bold text-xs uppercase tracking-wider ml-[-10px]">
-          <i className="ph-bold ph-clock mr-1 align-middle"></i> Таймер
+          <Clock weight="bold" className="mr-1 align-middle inline-block" /> Таймер
         </legend>
 
         <SettingsRow 
@@ -114,7 +115,7 @@ export const GeneralSettings = memo(() => {
           <div className="flex flex-col gap-1">
             <div className="text-[11px] uppercase text-[#10b981] font-bold mb-3 tracking-wide opacity-80">Добавлять время при условии</div>
             
-            <SettingsRow label="Смена лидера" icon="ph-bold ph-arrows-down-up">
+            <SettingsRow label="Смена лидера" icon={<ArrowsDownUp weight="bold" className="text-lg opacity-80" />}>
                <SettingToggle checked={addTimeOnLeaderChange} onChange={toggleAddTimeOnLeaderChange} />
                <div className="relative flex items-center">
                  <input 
@@ -128,7 +129,7 @@ export const GeneralSettings = memo(() => {
                </div>
             </SettingsRow>
 
-            <SettingsRow label="Новый лот" icon="ph-bold ph-plus-circle">
+            <SettingsRow label="Новый лот" icon={<PlusCircle weight="bold" className="text-lg opacity-80" />}>
                <SettingToggle checked={addTimeOnNewLot} onChange={toggleAddTimeOnNewLot} />
                <div className="relative flex items-center">
                  <input 
@@ -142,7 +143,7 @@ export const GeneralSettings = memo(() => {
                </div>
             </SettingsRow>
 
-             <SettingsRow label="Новый донат" icon="ph-bold ph-coins">
+             <SettingsRow label="Новый донат" icon={<Coins weight="bold" className="text-lg opacity-80" />}>
                <SettingToggle checked={addTimeOnNewDonation} onChange={toggleAddTimeOnNewDonation} />
                <div className="relative flex items-center">
                  <input 
@@ -161,7 +162,7 @@ export const GeneralSettings = memo(() => {
           <div className="flex flex-col gap-1">
             <div className="text-[11px] uppercase text-[#f59e0b] font-bold mb-3 tracking-wide opacity-80">НЕ добавлять время при условии</div>
             
-            <SettingsRow label="Таймер больше чем" icon="ph-bold ph-timer">
+            <SettingsRow label="Таймер больше чем" icon={<Timer weight="bold" className="text-lg opacity-80" />}>
                <SettingToggle checked={preventTimeAddWhenOver} onChange={togglePreventTimeAddWhenOver} />
                <div className="relative flex items-center">
                  <input 

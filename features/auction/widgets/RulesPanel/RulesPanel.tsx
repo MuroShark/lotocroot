@@ -2,6 +2,13 @@
 "use client";
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { 
+  CaretDown, Plus, X, ArrowUUpLeft, ArrowUUpRight, 
+  TextB, TextItalic, TextUnderline, TextStrikethrough, 
+  TextAUnderline, Highlighter, Minus, 
+  TextAlignLeft, TextAlignCenter, TextAlignRight, 
+  ListBullets, ListNumbers 
+} from '@phosphor-icons/react';
 
 // Типы для пресетов
 interface RulesPreset {
@@ -291,18 +298,18 @@ export const RulesPanel: React.FC = () => {
               className={`flex h-7 w-7 items-center justify-center rounded border transition-colors ${isPresetMenuOpen ? 'border-[var(--primary)] text-white bg-[rgba(145,71,255,0.1)]' : 'border-[#333] text-[#71717a] hover:bg-[#333] hover:text-white'}`}
               title="Пресеты"
             >
-              <i className="ph-bold ph-caret-down"></i>
+              <CaretDown weight="bold" />
             </button>
             {isPresetMenuOpen && (
               <div className="absolute right-0 top-[110%] w-[220px] rounded-lg border border-[#333] bg-[#18181b] p-1 shadow-2xl z-50 flex flex-col gap-1 animate-in fade-in zoom-in-95 duration-200">
-                 <button onClick={savePreset} className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-[12px] font-semibold text-[var(--primary)] hover:bg-[rgba(145,71,255,0.1)] transition-colors"><i className="ph-bold ph-plus"></i> Сохранить как новый</button>
+                 <button onClick={savePreset} className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-[12px] font-semibold text-[var(--primary)] hover:bg-[rgba(145,71,255,0.1)] transition-colors"><Plus weight="bold" /> Сохранить как новый</button>
                  <div className="h-px bg-[#333] my-1" />
                  {presets.length === 0 && <div className="px-2 py-2 text-center text-[11px] text-[#555]">Нет пресетов</div>}
                  <div className="flex flex-col gap-0.5 max-h-[200px] overflow-y-auto customScrollbar">
                    {presets.map(preset => (
                      <div key={preset.id} className="group flex items-center justify-between rounded px-2 py-1.5 text-[12px] text-[#e4e4e7] hover:bg-[#27272a] cursor-pointer" onClick={() => loadPreset(preset)}>
                         <span className="truncate max-w-[150px]">{preset.name}</span>
-                        <button onClick={(e) => deletePreset(e, preset.id)} className="hidden group-hover:flex h-5 w-5 items-center justify-center rounded text-[#71717a] hover:bg-[#ef4444] hover:text-white"><i className="ph-bold ph-x text-[10px]"></i></button>
+                        <button onClick={(e) => deletePreset(e, preset.id)} className="hidden group-hover:flex h-5 w-5 items-center justify-center rounded text-[#71717a] hover:bg-[#ef4444] hover:text-white"><X weight="bold" className="text-[10px]" /></button>
                      </div>
                    ))}
                  </div>
@@ -316,38 +323,38 @@ export const RulesPanel: React.FC = () => {
       <div className={`flex flex-wrap items-center gap-1.5 border-b border-[#333] bg-[#202024] transition-all duration-300 ease-in-out overflow-hidden relative z-10 
         ${isEditing ? 'opacity-100 max-h-[100px] p-2' : 'opacity-0 max-h-0 py-0 border-b-0 pointer-events-none'}`}>
         <div className="flex items-center gap-0.5 border-r border-[#333] pr-2 mr-0.5">
-          <button onClick={undo} disabled={historyIndex <= 0} className={`${btnBase} disabled:opacity-30 disabled:hover:bg-transparent`}><i className="ph-bold ph-arrow-u-up-left"></i></button>
-          <button onClick={redo} disabled={historyIndex >= historyStack.length - 1} className={`${btnBase} disabled:opacity-30 disabled:hover:bg-transparent`}><i className="ph-bold ph-arrow-u-up-right"></i></button>
+          <button onClick={undo} disabled={historyIndex <= 0} className={`${btnBase} disabled:opacity-30 disabled:hover:bg-transparent`}><ArrowUUpLeft weight="bold" /></button>
+          <button onClick={redo} disabled={historyIndex >= historyStack.length - 1} className={`${btnBase} disabled:opacity-30 disabled:hover:bg-transparent`}><ArrowUUpRight weight="bold" /></button>
         </div>
         <div className="flex items-center gap-0.5 border-r border-[#333] pr-2 mr-0.5">
-          <button onClick={() => execCmd('bold')} className={getBtnClass('bold')}><i className="ph-bold ph-text-b"></i></button>
-          <button onClick={() => execCmd('italic')} className={getBtnClass('italic')}><i className="ph-bold ph-text-italic"></i></button>
-          <button onClick={() => execCmd('underline')} className={getBtnClass('underline')}><i className="ph-bold ph-text-underline"></i></button>
-          <button onClick={() => execCmd('strikeThrough')} className={getBtnClass('strikeThrough')}><i className="ph-bold ph-text-strikethrough"></i></button>
+          <button onClick={() => execCmd('bold')} className={getBtnClass('bold')}><TextB weight="bold" /></button>
+          <button onClick={() => execCmd('italic')} className={getBtnClass('italic')}><TextItalic weight="bold" /></button>
+          <button onClick={() => execCmd('underline')} className={getBtnClass('underline')}><TextUnderline weight="bold" /></button>
+          <button onClick={() => execCmd('strikeThrough')} className={getBtnClass('strikeThrough')}><TextStrikethrough weight="bold" /></button>
         </div>
         <div className="flex items-center gap-0.5 border-r border-[#333] pr-2 mr-0.5">
            <div className={`${btnBase} overflow-hidden`}>
-             <i className="ph-bold ph-text-a-underline z-10 pointer-events-none"></i>
+             <TextAUnderline weight="bold" className="z-10 pointer-events-none" />
              <input type="color" className="absolute inset-0 h-full w-full opacity-0 cursor-pointer z-20" onMouseDown={saveSelection} onChange={(e) => applyColor('foreColor', e.target.value)} />
            </div>
            <div className={`${btnBase} overflow-hidden`}>
-             <i className="ph-bold ph-highlighter z-10 pointer-events-none"></i>
+             <Highlighter weight="bold" className="z-10 pointer-events-none" />
              <input type="color" className="absolute inset-0 h-full w-full opacity-0 cursor-pointer z-20" onMouseDown={saveSelection} onChange={(e) => applyColor('hiliteColor', e.target.value)} />
            </div>
         </div>
         <div className="flex items-center gap-0.5 border-r border-[#333] pr-2 mr-0.5">
-          <button onClick={() => adjustFontSize(-2)} className={btnBase}><i className="ph-bold ph-minus"></i></button>
+          <button onClick={() => adjustFontSize(-2)} className={btnBase}><Minus weight="bold" /></button>
           <div className="flex h-6 w-8 items-center justify-center rounded border border-[#333] bg-[#111] text-[11px] font-mono text-white">{fontSize}</div>
-          <button onClick={() => adjustFontSize(2)} className={btnBase}><i className="ph-bold ph-plus"></i></button>
+          <button onClick={() => adjustFontSize(2)} className={btnBase}><Plus weight="bold" /></button>
         </div>
         <div className="flex items-center gap-0.5 border-r border-[#333] pr-2 mr-0.5">
-          <button onClick={() => execCmd('justifyLeft')} className={getBtnClass('justifyLeft')}><i className="ph-bold ph-text-align-left"></i></button>
-          <button onClick={() => execCmd('justifyCenter')} className={getBtnClass('justifyCenter')}><i className="ph-bold ph-text-align-center"></i></button>
-          <button onClick={() => execCmd('justifyRight')} className={getBtnClass('justifyRight')}><i className="ph-bold ph-text-align-right"></i></button>
+          <button onClick={() => execCmd('justifyLeft')} className={getBtnClass('justifyLeft')}><TextAlignLeft weight="bold" /></button>
+          <button onClick={() => execCmd('justifyCenter')} className={getBtnClass('justifyCenter')}><TextAlignCenter weight="bold" /></button>
+          <button onClick={() => execCmd('justifyRight')} className={getBtnClass('justifyRight')}><TextAlignRight weight="bold" /></button>
         </div>
         <div className="flex items-center gap-0.5">
-          <button onClick={() => execCmd('insertUnorderedList')} className={getBtnClass('insertUnorderedList')}><i className="ph-bold ph-list-bullets"></i></button>
-          <button onClick={() => execCmd('insertOrderedList')} className={getBtnClass('insertOrderedList')}><i className="ph-bold ph-list-numbers"></i></button>
+          <button onClick={() => execCmd('insertUnorderedList')} className={getBtnClass('insertUnorderedList')}><ListBullets weight="bold" /></button>
+          <button onClick={() => execCmd('insertOrderedList')} className={getBtnClass('insertOrderedList')}><ListNumbers weight="bold" /></button>
         </div>
       </div>
 

@@ -35,7 +35,7 @@ interface CurrencyState {
   resetCurrencySettings: () => void;
 }
 
-const CBR_API_URL = 'https://www.cbr-xml-daily.ru/daily_json.js';
+const CBR_API_URL = '/api/currency';
 
 export const useCurrencyStore = create<CurrencyState>()(persist(
   (set, get) => ({

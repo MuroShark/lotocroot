@@ -8,6 +8,7 @@ import type { Lot } from '../../model/types';
 import { useLotItem } from '../../model/hooks/useLotItem';
 import { useAuctionViewStore } from '@/features/auction/store/auctionViewStore';
 import type { Donation } from '@/shared/types';
+import { Check, PlusMinus, Trash } from '@phosphor-icons/react';
 
 // --- 1. Изолированный компонент для ввода математики ---
 // Он хранит свое состояние сам, чтобы не ререндерить весь Лот при вводе цифр
@@ -69,7 +70,7 @@ const MathInput = memo(({ onConfirm, isOpen, onClose }: MathInputProps) => {
             className="flex h-6 w-6 shrink-0 items-center justify-center rounded-sm bg-[#9147ff] text-white transition hover:bg-[#7c3aed] text-base"
             aria-label="Подтвердить"
         >
-            <i className="ph-bold ph-check"></i>
+            <Check weight="bold" />
         </button>
      </div>
   );
@@ -277,7 +278,7 @@ export const LotItem: React.FC<LotItemProps> = memo(({
                 title="Изменить сумму"
                 aria-label="Изменить сумму"
              >
-                <i className="ph-bold ph-plus-minus"></i>
+                <PlusMinus weight="bold" />
              </button>
 
              {/* 2. Изолированный компонент ввода */}
@@ -307,7 +308,7 @@ export const LotItem: React.FC<LotItemProps> = memo(({
             title="Удалить"
             aria-label="Удалить лот"
           >
-            <i className="ph ph-trash text-base"></i>
+            <Trash className="text-base" />
           </button>
         </div>
 

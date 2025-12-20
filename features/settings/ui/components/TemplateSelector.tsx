@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 // Импортируем дефолтное состояние
 import { useAuctionViewStore, DEFAULT_AUCTION_STATE } from "@/features/auction/store/auctionViewStore";
 import { useCurrencyStore, DEFAULT_CURRENCY_STATE } from "../../model/currencyStore";
+import { CaretDown, PencilSimple, Trash, Plus, FloppyDisk } from "@phosphor-icons/react";
 
 type Template = {
   id: string;
@@ -172,7 +173,7 @@ export const TemplateSelector = () => {
           className={`w-full bg-[#202024] border border-[#27272a] text-white px-3 h-[34px] rounded-md text-xs cursor-pointer flex items-center justify-between transition-colors hover:border-[#555] ${isOpen ? '!border-[#9147ff]' : ''}`}
         >
           <span className="truncate">{activeTemplate?.name}</span>
-          <i className="ph-bold ph-caret-down"></i>
+          <CaretDown weight="bold" />
         </button>
 
         <div className={`absolute top-[calc(100%+6px)] left-0 right-0 bg-[#18181b] border border-[#27272a] rounded-lg shadow-2xl p-1 transition-all duration-200 origin-top ${isOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2'}`}>
@@ -203,14 +204,14 @@ export const TemplateSelector = () => {
                     title="Переименовать"
                     onClick={(e) => handleStartEditing(e, tpl)}
                   >
-                    <i className="ph-bold ph-pencil-simple text-xs"></i>
+                    <PencilSimple weight="bold" className="text-xs" />
                   </button>
                   <button
                     className="w-5 h-5 flex items-center justify-center rounded hover:bg-red-500/15 text-red-500"
                     title="Удалить"
                     onClick={(e) => handleDeleteTemplate(e, tpl.id)}
                   >
-                    <i className="ph-bold ph-trash text-xs"></i>
+                    <Trash weight="bold" className="text-xs" />
                   </button>
                 </div>
               )}
@@ -224,7 +225,7 @@ export const TemplateSelector = () => {
         title="Создать шаблон из текущих настроек"
         onClick={handleCreateTemplate}
       >
-        <i className="ph-bold ph-plus"></i>
+        <Plus weight="bold" />
       </button>
 
       <button
@@ -233,7 +234,7 @@ export const TemplateSelector = () => {
         onClick={handleSaveTemplate}
         disabled={selectedId === 'default'}
       >
-        <i className="ph-bold ph-floppy-disk"></i>
+        <FloppyDisk weight="bold" />
       </button>
     </div>
   );

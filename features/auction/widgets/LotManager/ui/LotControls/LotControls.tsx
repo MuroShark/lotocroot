@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { Plus, MagnifyingGlass } from '@phosphor-icons/react';
 
 interface LotControlsProps {
   newLotContent: string;
@@ -67,14 +68,14 @@ const LotControlsComponent: React.FC<LotControlsProps> = ({
           type="submit" 
           className="flex shrink-0 cursor-pointer items-center gap-2 rounded-lg bg-[#9147ff] px-5 py-0 text-[13px] font-semibold text-white transition hover:bg-[#7c3aed] hover:shadow-[0_4px_12px_rgba(145,71,255,0.25)] active:translate-y-0 h-[42px]"
         >
-          <i className="ph-bold ph-plus"></i>
+          <Plus weight="bold" />
           Добавить
         </button>
       </form>
 
       {/* Поиск */}
       <div className="flex h-[42px] w-[260px] shrink-0 items-center rounded-lg border border-[#333] bg-[#202024] px-3 transition focus-within:border-[#555]">
-        <i className="ph ph-magnifying-glass mr-2.5 text-lg text-[#71717a]"></i>
+        <MagnifyingGlass className="mr-2.5 text-lg text-[#71717a]" />
         <input
           type="text"
           value={searchTerm}

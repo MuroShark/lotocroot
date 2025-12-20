@@ -1,4 +1,5 @@
 import React from 'react';
+import { Crown } from '@phosphor-icons/react';
 
 interface WheelCanvasProps {
     canvasRef: React.RefObject<HTMLCanvasElement | null>;
@@ -85,7 +86,7 @@ export const WheelCanvas = ({
                 
                 {/* Hub (z-20) */}
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80px] h-[80px] bg-[#18181b] border-4 border-[#27272a] rounded-full z-20 flex items-center justify-center shadow-[0_0_30px_rgba(0,0,0,0.3)]">
-                    <i className="ph-fill ph-crown text-[32px] text-[var(--primary)]"></i>
+                    <Crown weight="fill" className="text-[32px] text-[var(--primary)]" />
                 </div>
 
                 {/* Overlay (z-25) */}

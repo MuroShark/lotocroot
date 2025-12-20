@@ -3,6 +3,7 @@
 import { useAuctionViewStore } from '@/features/auction/store/auctionViewStore';
 import type { DonationSortOrder } from '@/features/auction/store/auctionViewStore';
 import { useShallow } from 'zustand/react/shallow';
+import { Check, ArrowsDownUp } from '@phosphor-icons/react';
 
 const sortOptions: { label: string; value: DonationSortOrder }[] = [
   { label: 'Сначала новые', value: 'newest' }, // Поменял местами, как в HTML коде (обычно новые сверху)
@@ -37,9 +38,7 @@ const SortItem = ({
   >
     <span>{label}</span>
     {/* Иконка галочки */}
-    <i 
-      className={`ph-bold ph-check text-sm transition-opacity duration-200 ${isActive ? 'opacity-100' : 'opacity-0'}`}
-    ></i>
+    <Check weight="bold" className={`text-sm transition-opacity duration-200 ${isActive ? 'opacity-100' : 'opacity-0'}`} />
   </button>
 );
 
@@ -55,7 +54,7 @@ export const DonationSort = () => {
     <div className="group relative flex h-full items-center">
       {/* Иконка-триггер */}
       <div className="cursor-pointer p-3 text-[#71717a] transition-colors group-hover:text-white">
-        <i className="ph-bold ph-arrows-down-up text-base"></i>
+        <ArrowsDownUp weight="bold" className="text-base" />
       </div>
 
       {/* "Мостик" (невидимый блок), чтобы меню не закрывалось, когда ведем мышку от иконки к меню */}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { RouletteSegment, WinnerModalState } from '../types';
+import { Trophy } from '@phosphor-icons/react';
 
 interface WinnerModalProps {
     data: WinnerModalState;
@@ -14,7 +15,7 @@ export const WinnerModal: React.FC<WinnerModalProps> = ({ data, onClose }) => {
         >
             <div className={`w-[400px] bg-[#18181b] border border-[var(--primary)] rounded-[20px] p-10 text-center shadow-[0_0_100px_rgba(145,71,255,0.4)] relative transition-transform duration-400 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] ${data.show ? 'scale-100' : 'scale-75'}`}>
                 <div className="w-[80px] h-[80px] mx-auto mb-5 bg-[var(--primary)] text-white rounded-full flex items-center justify-center text-[40px] animate-shadow-pulse">
-                    <i className="ph-fill ph-trophy"></i>
+                    <Trophy weight="fill" />
                 </div>
                 <div className="text-sm uppercase tracking-[2px] text-[var(--text-muted)] mb-2">
                     {data.isFinal ? "🏆 АБСОЛЮТНЫЙ ПОБЕДИТЕЛЬ 🏆" : "Победитель"}

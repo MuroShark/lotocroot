@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import { TwitchLogo, CurrencyDollar, Wallet, type Icon } from '@phosphor-icons/react';
 
 export type IntegrationType = 'twitch' | 'da' | 'dp';
 
@@ -16,19 +17,19 @@ interface IntegrationCardProps {
   isDisabled?: boolean;
 }
 
-const THEMES: Record<IntegrationType, { icon: string; color: string; bg: string }> = {
+const THEMES: Record<IntegrationType, { Icon: Icon; color: string; bg: string }> = {
   twitch: { 
-    icon: 'ph-twitch-logo', 
+    Icon: TwitchLogo, 
     color: 'text-[#a970ff]', 
     bg: 'bg-[#a970ff]/10' 
   },
   da: { 
-    icon: 'ph-currency-dollar', 
+    Icon: CurrencyDollar, 
     color: 'text-[#F57D07]', 
     bg: 'bg-[#F57D07]/10' 
   },
   dp: { 
-    icon: 'ph-wallet', 
+    Icon: Wallet, 
     color: 'text-[#44AB4F]', 
     bg: 'bg-[#44AB4F]/10' 
   }
@@ -67,7 +68,7 @@ export const IntegrationCard: React.FC<IntegrationCardProps> = ({
         {iconSrc ? (
           <Image src={iconSrc} alt={`${name} icon`} width={24} height={24} />
         ) : (
-          <i className={`ph-fill ${theme.icon}`}></i>
+          <theme.Icon weight="fill" />
         )}
       </div>
 

@@ -1,4 +1,5 @@
 import React from 'react';
+import { PaintBrushBroad } from '@phosphor-icons/react';
 
 export const AppearanceSettings = () => {
   return (
@@ -8,7 +9,7 @@ export const AppearanceSettings = () => {
           Work in Progress
         </div>
         
-        <i className="ph-duotone ph-paint-brush-broad text-5xl text-[#9147ff]/80 mb-5 drop-shadow-[0_0_10px_rgba(145,71,255,0.3)]"></i>
+        <PaintBrushBroad weight="duotone" className="text-5xl text-[#9147ff]/80 mb-5 drop-shadow-[0_0_10px_rgba(145,71,255,0.3)]" />
         
         <div className="text-lg font-bold text-white mb-2">
           Раздел в разработке

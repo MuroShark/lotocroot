@@ -8,6 +8,7 @@ import { RouletteControls } from "./RouletteControls";
 import { RouletteList } from "./RouletteList";
 import { WheelCanvas } from "./WheelCanvas";
 import { WinnerModal } from "./WinnerModal";
+import { Check, Palette } from "@phosphor-icons/react";
 
 export const RouletteView: React.FC = () => {
   const [duration, setDuration] = useState(10);
@@ -93,14 +94,14 @@ export const RouletteView: React.FC = () => {
                             className={`w-4 h-4 border border-[#444] rounded flex items-center justify-center transition-colors ${game.hideEliminated ? 'bg-[var(--primary)] border-[var(--primary)] text-white' : ''}`}
                             onClick={() => game.setHideEliminated(!game.hideEliminated)}
                         >
-                            {game.hideEliminated && <i className="ph-bold ph-check text-[10px]"></i>}
+                            {game.hideEliminated && <Check weight="bold" className="text-[10px]" />}
                         </div>
                         <span>Скрывать выбывших</span>
                      </label>
                 ) : <div></div>}
                 
                 <button onClick={game.shuffleColors} className="w-8 h-8 flex items-center justify-center rounded bg-transparent text-[#666] hover:text-white hover:bg-[rgba(255,255,255,0.1)] transition-colors" title="Перемешать цвета">
-                    <i className="ph-bold ph-palette text-lg"></i>
+                    <Palette weight="bold" className="text-lg" />
                 </button>
             </div>
         </div>

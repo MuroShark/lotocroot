@@ -2,6 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+// Импортируем иконки как компоненты
+import { 
+  Gavel, 
+  ListDashes, 
+  Spinner, 
+  Gear, 
+  Bug, 
+  GithubLogo 
+} from '@phosphor-icons/react';
 
 interface SideNavProps {
   className?: string;
@@ -25,24 +34,29 @@ export const SideNav: React.FC<SideNavProps> = ({ className }) => {
       {/* Логотип */}
       <Link 
         href="/" 
-        className="mb-8 flex h-10 w-10 items-center justify-center text-[26px] text-[#9147ff] transition hover:[text-shadow:0_0_15px_rgba(145,71,255,0.4)]" 
+        className="mb-8 flex h-10 w-10 items-center justify-center text-[#9147ff] transition hover:[text-shadow:0_0_15px_rgba(145,71,255,0.4)]" 
         title="Auction Ultimate"
       >
-        <i className="ph-bold ph-gavel"></i>
+        {/* Было: <i className="ph-bold ph-gavel"></i> */}
+        {/* Стало: Компонент с весом bold и размером 26px (как в CSS) */}
+        <Gavel size={26} weight="bold" />
       </Link>
 
       {/* Ссылки навигации */}
       <Link href="/" className={getNavClass('/')} title="Аукцион">
-        <i className="ph-fill ph-list-dashes text-[22px]"></i>
+        {/* Было: <i className="ph-fill ph-list-dashes text-[22px]"></i> */}
+        <ListDashes size={22} weight="fill" />
       </Link>
 
       <Link href="/roulette" className={getNavClass('/roulette')} title="Рулетка">
-        <i className="ph-fill ph-spinner text-[22px]"></i>
+        {/* Было: <i className="ph-fill ph-spinner text-[22px]"></i> */}
+        <Spinner size={22} weight="fill" />
       </Link>
       
-      {/* Кнопка настроек перемещена сюда */}
+      {/* Кнопка настроек */}
       <Link href="/settings" className={getNavClass('/settings')} title="Настройки">
-        <i className="ph ph-gear text-[22px]"></i>
+        {/* Было: <i className="ph ph-gear text-[22px]"></i> (обычный вес regular) */}
+        <Gear size={22} />
       </Link>
 
       {/* Внешние ссылки */}
@@ -54,7 +68,7 @@ export const SideNav: React.FC<SideNavProps> = ({ className }) => {
           className={getNavClass('bug-report')} 
           title="Сообщить о баге"
         >
-          <i className="ph ph-bug text-[22px]"></i>
+          <Bug size={22} />
         </Link>
 
         <Link 
@@ -64,7 +78,7 @@ export const SideNav: React.FC<SideNavProps> = ({ className }) => {
           className={getNavClass('github')} 
           title="GitHub"
         >
-          <i className="ph ph-github-logo text-[22px]"></i>
+          <GithubLogo size={22} />
         </Link>
       </div>
     </nav>

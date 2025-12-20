@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { useAuctionIntegrationsStore } from '@/features/auction/store/auctionIntegrationsStore';
 import { useTwitchSocket } from '@/features/auction/hooks/useTwitchSocket';
 import { useTwitchAuth } from '@/features/auth/hooks/useTwitchAuth';
+import { TwitchLogo, PlugsConnected, type Icon } from '@phosphor-icons/react';
 
 // --- Компонент ToggleSwitch ---
 const ToggleSwitch = ({ checked, onChange, disabled, isConnecting }: { checked: boolean; onChange: () => void; disabled?: boolean; isConnecting?: boolean }) => {
@@ -34,7 +35,7 @@ const ToggleSwitch = ({ checked, onChange, disabled, isConnecting }: { checked: 
 // --- Интерфейсы и ServiceRow ---
 interface ServiceRowProps {
   name: string;
-  iconClass?: string;
+  Icon?: Icon;
   iconSrc?: string;
   isAuthorized: boolean;
   isEnabled: boolean;
@@ -54,7 +55,7 @@ interface ServiceRowProps {
 
 const ServiceRow: React.FC<ServiceRowProps> = ({
   name,
-  iconClass,
+  Icon,
   iconSrc,
   isAuthorized,
   isEnabled,
@@ -97,7 +98,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
         {iconSrc ? (
           <Image src={iconSrc} alt={`${name} icon`} width={22} height={22} className={`${isEnabled && invertIconOnActive ? 'brightness-0 invert' : ''} transition-all`}/>
         ) : (
-          <i className={iconClass}></i>
+          Icon && <Icon weight="fill" size={22} />
         )}
       </div>
       <div className="flex flex-1 flex-col justify-center">
@@ -255,7 +256,7 @@ const IntegrationsManagerComponent: React.FC<IntegrationsManagerProps> = ({ onOp
         `}
       >
         <div className="relative flex items-center justify-center">
-          <i className={`ph-fill ph-plugs-connected text-base transition-colors ${hasActive ? 'text-[var(--primary)]' : 'text-inherit'}`}></i>
+          <PlugsConnected weight="fill" size={16} className={`transition-colors ${hasActive ? 'text-[var(--primary)]' : 'text-inherit'}`} />
           <div className={`
              absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-[var(--green)] shadow-[0_0_6px_var(--green)] transition-opacity duration-300
              ${hasActive ? 'opacity-100' : 'opacity-0'}
@@ -284,7 +285,7 @@ const IntegrationsManagerComponent: React.FC<IntegrationsManagerProps> = ({ onOp
         <div className="flex flex-col gap-1">
           <ServiceRow 
             name="Twitch"
-            iconClass="ph-fill ph-twitch-logo"
+            Icon={TwitchLogo}
             isAuthorized={isTwitchAuth}
             isEnabled={isEnabledTwitch}
             isConnecting={twitchStatus === 'connecting'}

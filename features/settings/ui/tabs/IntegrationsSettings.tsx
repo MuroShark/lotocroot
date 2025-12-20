@@ -9,6 +9,7 @@ import { CurrencyGrid } from "../components/CurrencyGrid";
 import { CurrencyCode, RateSource, useCurrencyStore, DonationDisplayMode } from "../../model/currencyStore";
 import { IntegrationCard } from "../components/IntegrationCard";
 import { CustomSelect } from "../components/CustomSelect";
+import { CurrencyCircleDollar } from "@phosphor-icons/react";
 
 export const IntegrationsSettings = () => {
   // --- DonationAlerts ---
@@ -133,7 +134,7 @@ export const IntegrationsSettings = () => {
         focus-within:hover:border-[#9147ff]
       ">
         <legend className="px-2 text-[#9147ff] font-bold text-xs uppercase tracking-wider ml-[-10px]">
-          <i className="ph-bold ph-currency-circle-dollar mr-1 align-middle"></i> Финансы и Валюта
+          <CurrencyCircleDollar weight="bold" className="mr-1 align-middle inline-block" /> Финансы и Валюта
         </legend>
         
         <div className="grid grid-cols-3 gap-5 mb-5">

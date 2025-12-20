@@ -2,6 +2,7 @@ import React, { useState, memo } from 'react';
 import { useAuctionViewStore } from '@/features/auction/store/auctionViewStore';
 import { useProfilesStore } from '@/features/auction/store/profilesStore';
 import { ImportExportModal } from '../ImportExportModal/ImportExportModal';
+import { Check, FloppyDisk, ArrowsLeftRight, Percent, ArrowsInLineVertical, Trash } from '@phosphor-icons/react';
 
 interface LotToolbarProps {
   onClearLots: () => void;
@@ -27,7 +28,7 @@ const LotToolbarComponent: React.FC<LotToolbarProps> = ({ onClearLots }) => {
     const normal = "border-[#333] bg-[#202024] text-[#71717a] hover:w-[130px] hover:border-[#555] hover:bg-[#27272a] hover:text-white active:bg-[#18181b]";
     return `${base} ${isSpecial ? specialClass : normal}`;
   }
-  const btnIconClass = "z-10 min-w-[40px] text-center text-xl transition duration-200";
+  const btnIconClass = "z-10 min-w-[40px] flex items-center justify-center text-xl transition duration-200";
   const btnTextClass = "translate-x-[-10px] whitespace-nowrap text-xs font-semibold opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100";
 
   // Класс для переключателей
@@ -44,13 +45,17 @@ const LotToolbarComponent: React.FC<LotToolbarProps> = ({ onClearLots }) => {
               onClick={handleSaveClick} 
               title="Сохранить"
             >
-               <i className={`ph ${isJustSaved ? 'ph-bold ph-check' : 'ph-floppy-disk'} ${btnIconClass}`}></i>
+               <div className={btnIconClass}>
+                  {isJustSaved ? <Check weight="bold" /> : <FloppyDisk />}
+               </div>
                <span className={`${btnTextClass} ${isJustSaved ? '!translate-x-0 !opacity-100' : ''}`}>{isJustSaved ? 'Сохранено' : 'Сохранить'}</span>
             </button>
 
             <button className={getBtnSmartClass()} onClick={() => setIsModalOpen(true)} title="Сохранения">
                {/* ИЗМЕНЕНИЕ: Иконка стрелок влево-вправо */}
-               <i className={`ph ph-arrows-left-right ${btnIconClass}`}></i>
+               <div className={btnIconClass}>
+                  <ArrowsLeftRight />
+               </div>
                <span className={btnTextClass}>Сохранения</span>
             </button>
          </div>
@@ -62,7 +67,7 @@ const LotToolbarComponent: React.FC<LotToolbarProps> = ({ onClearLots }) => {
                onClick={toggleShowPercentages} 
                title="Показать %"
             >
-               <i className="ph ph-percent"></i>
+               <Percent />
             </button>
 
             <button 
@@ -70,7 +75,7 @@ const LotToolbarComponent: React.FC<LotToolbarProps> = ({ onClearLots }) => {
                onClick={toggleCompactMode} 
                title="Компактный вид"
             >
-               <i className="ph ph-arrows-in-line-vertical"></i>
+               <ArrowsInLineVertical />
             </button>
 
             <div className="mx-2.5 h-7 w-px bg-[#333]"></div>
@@ -79,7 +84,9 @@ const LotToolbarComponent: React.FC<LotToolbarProps> = ({ onClearLots }) => {
                className={`${getBtnSmartClass()} hover:!w-[135px] hover:!border-[#ef4444] hover:!bg-[rgba(239,68,68,0.1)] hover:!text-[#ef4444]`} 
                onClick={onClearLots}
             >
-               <i className={`ph ph-trash ${btnIconClass}`}></i>
+               <div className={btnIconClass}>
+                  <Trash />
+               </div>
                <span className={btnTextClass}>Очистить всё</span>
             </button>
          </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface SettingsRowProps {
-  icon?: string;
+  icon?: React.ReactNode;
   label: string;
   description?: string;
   tooltip?: string;
@@ -17,7 +17,7 @@ export const SettingsRow: React.FC<SettingsRowProps> = React.memo(({
     <div className={`flex items-center justify-between py-3 border-b border-white/5 gap-5 last:border-0 ${className || ''}`}>
       <div className="flex-1">
         <div className="text-[13px] font-medium text-[#ccc] flex items-center gap-2">
-          {icon && <i className={`${icon} text-lg opacity-80`} />}
+          {icon}
           
           <span className={tooltip ? "border-b border-dashed border-[#71717a] cursor-help hover:text-white hover:border-[#9147ff] transition-colors relative group/tooltip" : ""}>
             {label}

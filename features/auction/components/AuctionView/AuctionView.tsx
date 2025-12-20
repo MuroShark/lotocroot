@@ -19,6 +19,7 @@ import { DonatePayWizardModal, Region } from '@/features/settings/ui/components/
 import { useShallow } from 'zustand/react/shallow';
 import { usePrevious } from '@/shared/hooks/usePrevious';
 import { useDonationAlertsAuth } from '@/features/auth/hooks/useDonationAlertsAuth';
+import { CaretRight, CaretLeft } from '@phosphor-icons/react';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-object-type
 interface AuctionViewProps {
@@ -187,14 +188,14 @@ export const AuctionView = memo(() => {
           onClick={toggleRulesPanel}
          >
           <span>Правила</span>
-          <i className={`ph-bold ph-caret-right transition-transform duration-300 ${isRulesOpen ? 'rotate-180' : ''}`}></i>
+          <CaretRight weight="bold" className={`transition-transform duration-300 ${isRulesOpen ? 'rotate-180' : ''}`} />
         </div>
 
         <div
           className={`side-trigger right-0 border-r-0 rounded-l-lg ${isIncomingOpen ? 'active' : ''}`}
           onClick={toggleIncomingPanel}
         >
-          <i className={`ph-bold ph-caret-left transition-transform duration-300 ${isIncomingOpen ? 'rotate-180' : ''}`}></i>
+          <CaretLeft weight="bold" className={`transition-transform duration-300 ${isIncomingOpen ? 'rotate-180' : ''}`} />
           <span>Входящие</span>
         </div>
 

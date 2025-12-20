@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { RouletteSegment, GameMode } from '../types';
+import { X } from '@phosphor-icons/react';
 
 interface RouletteListProps {
     segments: RouletteSegment[];
@@ -82,7 +83,7 @@ export const RouletteList: React.FC<RouletteListProps> = ({
                                     title={segments.length <= 1 ? "Нельзя удалить последнего участника" : "Удалить"}
                                     className="w-6 h-6 flex items-center justify-center rounded bg-transparent hover:bg-[rgba(239,68,68,0.15)] text-[#666] hover:text-[var(--red)] transition-colors disabled:opacity-20 disabled:hover:bg-transparent disabled:cursor-not-allowed"
                                 >
-                                    <i className="ph-bold ph-x"></i>
+                                    <X weight="bold" />
                                 </button>
                             </div>
                         </div>

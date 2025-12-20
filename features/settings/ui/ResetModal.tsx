@@ -1,4 +1,5 @@
 "use client";
+import { Warning } from "@phosphor-icons/react";
 
 interface ResetModalProps {
   isOpen: boolean;
@@ -14,7 +15,7 @@ export const ResetModal: React.FC<ResetModalProps> = ({ isOpen, onClose, onConfi
       <div className="w-[400px] max-w-[90%] bg-[#141416] border border-[#27272a] rounded-xl shadow-2xl overflow-hidden scale-100 animate-in zoom-in-95 duration-200">
         <div className="px-6 pt-5 pb-2 flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-red-500/10 text-red-500 flex items-center justify-center text-2xl">
-            <i className="ph-fill ph-warning"></i>
+            <Warning weight="fill" />
           </div>
           <div className="text-base font-bold text-white">Сброс данных</div>
         </div>

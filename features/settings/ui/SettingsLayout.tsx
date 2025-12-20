@@ -4,6 +4,7 @@ import React from 'react';
 import { TemplateSelector } from './components/TemplateSelector';
 import { useAuctionViewStore } from '@/features/auction/store/auctionViewStore';
 import { useCurrencyStore } from '@/features/settings/model/currencyStore';
+import { ArrowCounterClockwise, Trash } from '@phosphor-icons/react';
 
 export type SettingsTabId = 'general' | 'integrations' | 'appearance';
 
@@ -77,14 +78,14 @@ export const SettingsLayout: React.FC<SettingsLayoutProps> = ({
           className="flex items-center gap-2 px-4 py-2 rounded-md text-xs font-semibold text-[#71717a] border border-[#333] hover:text-white hover:bg-white/5 transition-colors cursor-pointer"
           onClick={handleResetAll}
         >
-          <i className="ph-bold ph-arrow-counter-clockwise"></i> Сбросить настройки
+          <ArrowCounterClockwise weight="bold" /> Сбросить настройки
         </button>
         
         <button 
           className="flex items-center gap-2 px-4 py-2 rounded-md text-xs font-semibold text-[#ef4444] border border-red-500/20 hover:bg-red-500/10 transition-colors cursor-pointer"
           onClick={onHardReset}
         >
-          <i className="ph-bold ph-trash"></i> Полный сброс данных
+          <Trash weight="bold" /> Полный сброс данных
         </button>
       </div>
     </div>

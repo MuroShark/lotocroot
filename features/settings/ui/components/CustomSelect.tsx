@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react';
+import { CaretDown } from '@phosphor-icons/react';
 
 export interface SelectOption {
   value: string;
@@ -64,7 +65,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
         `}
       >
         <span className="truncate mr-2">{selectedOption?.label || value}</span>
-        <i className={`ph-bold ph-caret-down transition-transform duration-200 ${isOpen ? 'rotate-180' : ''} text-[#71717a]`} />
+        <CaretDown weight="bold" className={`transition-transform duration-200 ${isOpen ? 'rotate-180' : ''} text-[#71717a]`} />
       </div>
 
       {isOpen && !disabled && (

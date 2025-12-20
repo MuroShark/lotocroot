@@ -7,6 +7,7 @@ import { findBestLotMatch } from '@/features/auction/utils/findBestLotMatch';
 import { useCurrencyStore } from '@/features/settings/model/currencyStore';
 import { truncateText } from '@/shared/utils/truncateText';
 import { useShallow } from 'zustand/react/shallow';
+import { X, DotsThreeVertical, Shuffle } from '@phosphor-icons/react';
 
 export type DonationAction =
   | { type: 'DELETE' }
@@ -105,7 +106,7 @@ export const DonationItemContent = React.memo<DonationItemContentProps>(({
         className="absolute right-2 top-2 flex h-6 w-6 items-center justify-center rounded-md text-[#71717a] opacity-100 transition hover:bg-[rgba(239,68,68,0.1)] hover:text-[#ef4444]"
         title="Удалить"
       >
-        <i className="ph-bold ph-x"></i>
+        <X weight="bold" />
       </button>
 
       {/* Заголовок: Ник и Сумма */}
@@ -139,7 +140,7 @@ export const DonationItemContent = React.memo<DonationItemContentProps>(({
               onClick={(e) => { e.stopPropagation(); onToggleMenu(); }} 
               className={`${actionBtnClass} w-8 px-0 text-lg`}
             >
-               <i className="ph-bold ph-dots-three-vertical"></i>
+               <DotsThreeVertical weight="bold" />
             </button>
             
             {/* Выпадающее меню */}
@@ -149,7 +150,7 @@ export const DonationItemContent = React.memo<DonationItemContentProps>(({
                   onClick={handleAddToRandomLot} 
                   className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-[11px] font-semibold uppercase text-[#71717a] transition hover:bg-[#27272a] hover:text-[#f59e0b]"
                 >
-                  <i className="ph-bold ph-shuffle"></i>
+                  <Shuffle weight="bold" />
                   В рандом
                 </button>
               </div>

@@ -8,6 +8,7 @@ import type { Donation, DonationPlatform } from '@/shared/types';
 import { v4 as uuidv4 } from 'uuid';
 import { useAuctionViewStore } from '../auction/store/auctionViewStore';
 import { timerControls } from '../auction/components/Timer/Timer';
+import { Check } from '@phosphor-icons/react';
 
 
 // Компонент будет рендериться только в dev-режиме, поэтому хуки можно использовать без опасений
@@ -182,7 +183,7 @@ export const DevDonationPanel: React.FC<DevDonationPanelProps> = ({ isOpen, onCl
               {/* Опция авто-добавления */}
               <div className="mt-1 flex cursor-pointer items-center gap-3 rounded-md p-1 select-none" onClick={() => setAutoAddToLot(!autoAddToLot)}>
                 <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded border border-[var(--border-color)] bg-[var(--bg-input)]">
-                  {autoAddToLot && <i className="ph-bold ph-check text-xs text-[var(--primary)]"></i>}
+                  {autoAddToLot && <Check weight="bold" className="text-xs text-[var(--primary)]" />}
                 </div>
                 <label 
                   htmlFor="auto-add-to-lot" 
