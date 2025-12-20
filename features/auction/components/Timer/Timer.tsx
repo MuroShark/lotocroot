@@ -59,7 +59,7 @@ const TimerComponent: React.FC = () => {
 
   // Initialize timer with value from settings on mount if not running
   useEffect(() => {
-    setInitialState(timerInitialTime);
+    setInitialState(timerInitialTime || TEN_MINUTES);
   }, [timerInitialTime, setInitialState]);
 
   // Connect external controls to the store
