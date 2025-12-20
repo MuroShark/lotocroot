@@ -12,7 +12,7 @@ RUN npm ci
 COPY . .
 
 # Собираем проект (именно тут создается папка .next со всеми стилями)
-RUN npm run build -- --no-lint --no-mangling
+RUN npm run build
 
 # ---
 
