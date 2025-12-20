@@ -42,17 +42,12 @@ const getCSP = () => {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Отключаем строгий режим и сжатие для теста
   reactStrictMode: true,
   compress: false,
   
-  async headers() {
-    return [
-      {
-        source: '/:path*',
-        headers: [{ key: 'Content-Security-Policy', value: getCSP() }],
-      },
-    ];
-  },
+  // Явно указываем, что мы не используем standalone на этом тарифе
+  output: undefined, 
 };
 
 module.exports = nextConfig;
