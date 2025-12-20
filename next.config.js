@@ -42,10 +42,6 @@ const getCSP = () => {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Headers will be handled by withSentryConfig
-  turbopack: {
-    root: __dirname,
-  },
 };
 
 module.exports = nextConfig;
