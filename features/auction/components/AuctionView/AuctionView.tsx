@@ -53,7 +53,11 @@ export const AuctionView = memo(() => {
   // --- ГИДРАТАЦИЯ ---
   const [isHydrated, setIsHydrated] = useState(false);
   useEffect(() => {
-    setIsHydrated(true);
+    const unsubscribe = useLotsStore.persist.onFinishHydration(() => setIsHydrated(true));
+    if (useLotsStore.persist.hasHydrated()) {
+      setTimeout(() => setIsHydrated(true), 0);
+    }
+    return unsubscribe;
   }, []);
 
 

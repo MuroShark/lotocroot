@@ -6,7 +6,7 @@ const getCSP = () => {
   const policies = {
     'default-src': ["'self'"],
     // Добавили https://unpkg.com чтобы разрешить загрузку скрипта иконок
-    'script-src': ["'self'", "'wasm-unsafe-eval'", "'inline-speculation-rules'", "https://unpkg.com"],
+    'script-src': ["'self'", "'wasm-unsafe-eval'", "'inline-speculation-rules'", "https://unpkg.com", "'unsafe-inline'"],
     // Добавили https://unpkg.com для стилей (если скрипт подгружает CSS)
     'style-src': ["'self'", "'unsafe-inline'", "https://unpkg.com"],
     'img-src': ["'self'", 'blob:', 'data:'],
@@ -22,7 +22,7 @@ const getCSP = () => {
   };
 
   if (isDev) {
-    policies['script-src'].push("'unsafe-inline'", "'unsafe-eval'");
+    policies['script-src'].push("'unsafe-eval'");
   }
 
   return Object.entries(policies)
@@ -31,7 +31,7 @@ const getCSP = () => {
 };
 
 const nextConfig = {
-  output: "standalone",
+  // output: "standalone",
   
   async headers() {
     return [
