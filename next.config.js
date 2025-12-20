@@ -42,9 +42,9 @@ const getCSP = () => {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  turbopack: {
-    root: __dirname,
-  },
+  reactStrictMode: true,
+  compress: false,
+  
   async headers() {
     return [
       {
