@@ -20,20 +20,16 @@ RUN npm run build
 FROM node:20-alpine AS runner
 WORKDIR /app
 
-# Устанавливаем production (важно для оптимизации)
 ENV NODE_ENV=production
 
-# Копируем самое важное из этапа сборки
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/node_modules ./node_modules
 
-# ВАЖНО: Копируем папку public (там картинки, фавиконки)
-COPY --from=builder /app/public ./public
+COPY --from=builder /app/next.config.js ./ 
 
-# ВАЖНО: Копируем ВСЮ папку .next (там и стили, и чанки, и сервер)
+COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
 
-# Открываем порт и запускаем
 ENV PORT=3000
 EXPOSE 3000
 
