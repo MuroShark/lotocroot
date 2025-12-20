@@ -42,6 +42,7 @@ const getCSP = () => {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone", // <--- Добавьте эту строку
 };
 
 module.exports = nextConfig;
