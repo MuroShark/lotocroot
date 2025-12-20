@@ -52,10 +52,7 @@ const LotManagerViewComponent: React.FC<LotManagerViewProps> = ({
   const { addToast } = useToasterStore();
 
   useEffect(() => {
-    const unsubscribe = useLotsStore.persist.onFinishHydration(() => setIsHydrated(true));
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (useLotsStore.persist.hasHydrated()) setIsHydrated(true);
-    return unsubscribe;
+    setIsHydrated(true);
   }, []);
 
   const handleClearLots = useCallback(() => {
