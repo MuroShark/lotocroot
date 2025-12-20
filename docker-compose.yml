@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: lotocroot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "80:3000" # Наружу торчит 80 (стандартный веб), внутри 3000 (Next.js)
+    environment:
+      - NODE_ENV=production
+      # Если нужны другие переменные (секреты), добавьте их сюда или через TimeWeb
