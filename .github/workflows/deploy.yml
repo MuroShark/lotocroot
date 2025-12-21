@@ -1,0 +1,30 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main  # Или master, смотря какая у вас основная ветка
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          script: |
+            # Переходим в папку проекта
+            cd /root/my-app
+            
+            # Забираем свежий код
+            git pull origin main
+            
+            # Пересобираем и перезапускаем контейнеры
+            # Флаг --build заставит пересобрать билд Next.js
+            docker compose up -d --build --remove-orphans
+            
+            # Чистим старые неиспользуемые образы (чтобы не забить диск)
+            docker image prune -f
