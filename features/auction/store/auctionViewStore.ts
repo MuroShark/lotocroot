@@ -72,6 +72,9 @@ interface AuctionViewState {
   draggedDonationSize: { width: number; height: number };
   setDraggedDonationSize: (size: { width: number; height: number }) => void;
 
+  initialCursorPosition: { x: number; y: number };
+  setInitialCursorPosition: (pos: { x: number; y: number }) => void;
+
   // Настройки таймера
   timerInitialTime: number;
   setTimerInitialTime: (timeInMs: number) => void;
@@ -116,6 +119,7 @@ export const useAuctionViewStore = create<AuctionViewState>()(
       
       dragOffset: { x: 0, y: 0 },
       draggedDonationSize: { width: 0, height: 0 },
+      initialCursorPosition: { x: 0, y: 0 },
 
       // Действия
       toggleCompactMode: () => set((state) => ({ isCompactMode: !state.isCompactMode })),
@@ -136,6 +140,7 @@ export const useAuctionViewStore = create<AuctionViewState>()(
       setDraggedDonation: (donation) => set({ draggedDonation: donation }),
       setDragOffset: (offset) => set({ dragOffset: offset }),
       setDraggedDonationSize: (size) => set({ draggedDonationSize: size }),
+      setInitialCursorPosition: (pos) => set({ initialCursorPosition: pos }),
 
       setTimerInitialTime: (timeInMs) => set({ timerInitialTime: timeInMs }),
 

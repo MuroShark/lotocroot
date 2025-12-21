@@ -22,7 +22,7 @@ export const useDonatePaySocket = () => {
   const lots = useLotsStore((state) => state.lots);
   const updateLotAmount = useLotsStore((state) => state.updateLotAmount);
   const addDonation = useDonationsStore((state) => state.addDonation);
-  const { dpApiKey, dpRegion } = useAuthStore();
+  const { dpApiKey, dpRegion, dpUserId } = useAuthStore();
 
   const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>('disconnected');
   const [isInitializing, setIsInitializing] = useState(false);
@@ -37,7 +37,7 @@ export const useDonatePaySocket = () => {
   
   const lastConnectAttemptRef = useRef<number>(0);
 
-  const authRef = useRef({ apiKey: dpApiKey, region: dpRegion });
+  const authRef = useRef({ apiKey: dpApiKey, region: dpRegion, userId: dpUserId });
 
   const sessionRef = useRef({
     channel: '',
@@ -53,8 +53,8 @@ export const useDonatePaySocket = () => {
   }, [lots]);
 
   useEffect(() => {
-    authRef.current = { apiKey: dpApiKey, region: dpRegion };
-  }, [dpApiKey, dpRegion]);
+    authRef.current = { apiKey: dpApiKey, region: dpRegion, userId: dpUserId };
+  }, [dpApiKey, dpRegion, dpUserId]);
 
   // Обработка входящего доната (без изменений)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -250,7 +250,8 @@ export const useDonatePaySocket = () => {
   // --- Публичные методы ---
 
   const publicConnect = useCallback(async (forceRefresh = false) => {
-    const { apiKey, region } = authRef.current;
+    // Используем getState() для получения самых свежих данных из стора, минуя React Lifecycle и возможные гонки состояний
+    const { dpApiKey: apiKey, dpRegion: region, dpUserId: storeUserId } = useAuthStore.getState();
     
     // Очистка таймеров
     if (reconnectTimeoutRef.current) {
@@ -293,7 +294,7 @@ export const useDonatePaySocket = () => {
       console.log('[DonatePay] Fetching new configuration...');
       
       // ВАЖНО: Передаем userId из сессии, если он там есть (даже если токен протух)
-      const cachedUserId = sessionRef.current.userId;
+      const cachedUserId = sessionRef.current.userId || storeUserId;
 
       const response = await fetch('/api/auth/donatepay/socket', {
         method: 'POST',

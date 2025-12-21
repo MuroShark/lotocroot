@@ -26,6 +26,7 @@ const DonationItem = React.memo<({
     setIsDonationDragging,
     setDragOffset,
     setDraggedDonationSize,
+    setInitialCursorPosition,
   } = useAuctionViewStore();
   const [isBeingDragged, setIsBeingDragged] = useState(false);
   const dragImageRef = useRef<HTMLImageElement | null>(null);
@@ -60,6 +61,7 @@ const DonationItem = React.memo<({
     };
     setDragOffset(offset);
     setDraggedDonationSize({ width: rect.width, height: rect.height });
+    setInitialCursorPosition({ x: e.clientX, y: e.clientY });
 
     setDraggedDonation(donation);
     setIsDonationDragging(true);

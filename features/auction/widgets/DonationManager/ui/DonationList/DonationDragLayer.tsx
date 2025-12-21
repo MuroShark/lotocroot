@@ -11,13 +11,15 @@ export const DonationDragLayer: React.FC = () => {
     draggedDonation, 
     isDonationDragging, 
     dragOffset, 
-    draggedDonationSize 
+    draggedDonationSize,
+    initialCursorPosition
   } = useAuctionViewStore(
     useShallow((state) => ({
       draggedDonation: state.draggedDonation,
       isDonationDragging: state.isDonationDragging,
       dragOffset: state.dragOffset,
       draggedDonationSize: state.draggedDonationSize,
+      initialCursorPosition: state.initialCursorPosition,
     }))
   );
 
@@ -79,8 +81,7 @@ export const DonationDragLayer: React.FC = () => {
         top: 0,
         width: `${draggedDonationSize.width}px`,
         height: `${draggedDonationSize.height}px`,
-        // Начальная позиция может быть за экраном, JS её обновит в первом кадре
-        // Но лучше задать initial transform, если есть координаты старта (опционально)
+        transform: `translate3d(${initialCursorPosition.x - dragOffset.x}px, ${initialCursorPosition.y - dragOffset.y}px, 0)`,
       }}
     >
       <DonationItemContent 

@@ -19,6 +19,7 @@ import { DonatePayWizardModal, Region } from '@/features/settings/ui/components/
 import { useShallow } from 'zustand/react/shallow';
 import { usePrevious } from '@/shared/hooks/usePrevious';
 import { useDonationAlertsAuth } from '@/features/auth/hooks/useDonationAlertsAuth';
+import { useCurrencyStore } from '@/features/settings/model/currencyStore';
 import { CaretRight, CaretLeft } from '@phosphor-icons/react';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-object-type
@@ -43,6 +44,7 @@ export const AuctionView = memo(() => {
   const { donationAlerts, twitch, donatePay } = useAuctionIntegrationsStore(useShallow(state => state.services));
   const { setDpAuth } = useAuthStore();
   const [isDpWizardOpen, setIsDpWizardOpen] = useState(false);
+  const fetchRates = useCurrencyStore(state => state.fetchRates);
 
   const prevLots = usePrevious(lots);
 
@@ -60,6 +62,10 @@ export const AuctionView = memo(() => {
     return unsubscribe;
   }, []);
 
+  // Загружаем актуальные курсы валют при запуске аукциона
+  useEffect(() => {
+    fetchRates();
+  }, [fetchRates]);
 
   // --- ЛОГИКА АДАПТИВНОСТИ (ResizeObserver) ---
   const headerRef = useRef<HTMLDivElement>(null);
@@ -77,8 +83,8 @@ export const AuctionView = memo(() => {
     return () => observer.disconnect();
   }, []);
 
-  const handleDpConnect = (apiKey: string, region: Region) => {
-    setDpAuth(true, apiKey, region);
+  const handleDpConnect = (apiKey: string, region: Region, userId?: number | string) => {
+    setDpAuth(true, apiKey, region, userId ? String(userId) : null);
     setIsDpWizardOpen(false);
   };
 

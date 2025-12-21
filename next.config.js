@@ -10,7 +10,7 @@ const getCSP = () => {
     // Добавили https://unpkg.com для стилей (если скрипт подгружает CSS)
     'style-src': ["'self'", "'unsafe-inline'", "https://unpkg.com"],
     'img-src': ["'self'", 'blob:', 'data:'],
-    'connect-src': ["'self'", 'wss://*.donationalerts.com', 'https://www.donationalerts.com', "https://unpkg.com"],
+    'connect-src': ["'self'", 'wss://*.donationalerts.com', 'https://www.donationalerts.com', "https://unpkg.com", "wss://centrifugo.donatepay.ru"],
     // Добавили https://unpkg.com для шрифтов
     'font-src': ["'self'", 'data:', "https://unpkg.com"],
     'object-src': ["'none'"],

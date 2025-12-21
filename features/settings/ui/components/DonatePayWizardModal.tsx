@@ -18,7 +18,7 @@ const StepIndicator = ({ num, currentStep }: { num: number, currentStep: number 
 interface DonatePayWizardModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConnect: (apiKey: string, region: Region) => void;
+  onConnect: (apiKey: string, region: Region, userId?: number | string) => void;
 }
 
 export type Region = 'ru' | 'eu';
@@ -82,7 +82,7 @@ export const DonatePayWizardModal: FC<DonatePayWizardModalProps> = ({ isOpen, on
       const data = await response.json();
 
       if (data.isValid) {
-        onConnect(apiKey, selectedRegion);
+        onConnect(apiKey, selectedRegion, data.userData?.id);
         onClose();
       } else {
         // Выводим сообщение от сервера (там уже обработан "Неверный токен" и длина)

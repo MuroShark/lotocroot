@@ -11,7 +11,8 @@ interface AuthState {
   isDpAuthenticated: boolean;
   dpApiKey: string | null;
   dpRegion: Region | null;
-  setDpAuth: (status: boolean, apiKey: string | null, region: Region | null) => void;
+  dpUserId: string | null;
+  setDpAuth: (status: boolean, apiKey: string | null, region: Region | null, userId?: string | null) => void;
 
   // --- Twitch ---
   isTwitchAuthenticated: boolean;
@@ -42,8 +43,9 @@ export const useAuthStore = create<AuthState>()(
       isDpAuthenticated: false,
       dpApiKey: null,
       dpRegion: null,
-      setDpAuth: (status, apiKey, region) => set({ 
-        isDpAuthenticated: status, dpApiKey: apiKey, dpRegion: region 
+      dpUserId: null,
+      setDpAuth: (status, apiKey, region, userId = null) => set({ 
+        isDpAuthenticated: status, dpApiKey: apiKey, dpRegion: region, dpUserId: userId 
       }),
 
       // --- Twitch ---
