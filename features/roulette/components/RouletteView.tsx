@@ -9,6 +9,7 @@ import { RouletteList } from "./RouletteList";
 import { WheelCanvas } from "./WheelCanvas";
 import { WinnerModal } from "./WinnerModal";
 import { Check, Palette } from "@phosphor-icons/react";
+import { useLotsStore } from "@/entities/lot/model/store/lotsStore";
 
 export const RouletteView: React.FC = () => {
   const [duration, setDuration] = useState(10);
@@ -16,6 +17,7 @@ export const RouletteView: React.FC = () => {
   const game = useRouletteGame();
   
   const { particleCanvasRef, explode } = useParticles();
+  const deleteLot = useLotsStore((state) => state.deleteLot);
 
   const controller = useWheelController({
     segments: game.segments,
@@ -109,7 +111,12 @@ export const RouletteView: React.FC = () => {
         {/* MODAL */}
         <WinnerModal 
             data={game.winnerModal} 
-            onClose={(accepted) => game.setWinnerModal({ ...game.winnerModal, show: false })}
+            onClose={(accepted) => {
+                if (accepted && game.winnerModal.winner && game.mode === 'classic') {
+                    deleteLot(game.winnerModal.winner.id);
+                }
+                game.setWinnerModal({ ...game.winnerModal, show: false });
+            }}
         />
     </div>
   );
