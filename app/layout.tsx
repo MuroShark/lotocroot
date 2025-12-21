@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google"; // Добавляем JetBrains Mono
-import Script from "next/script";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { SideNav } from "@/widgets/SideNav";
 import { Toaster } from "@/shared/ui/Toast/Toaster";
