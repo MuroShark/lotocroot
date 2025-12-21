@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   creator: "MuroShark",
   openGraph: {
     title: "LotoCroot — Аукцион и Колесо Удачи",
-    description: "Бесплатный инструмент для стримеров: аукцион, рулетка, интеграции с DonationAlerts и Twitch. Настраиваемый таймер и удобное управление.",
+    description: "Бесплатный инструмент для стримеров: аукцион, рулетка, интеграции с DonationAlerts, DonatePay и Twitch. Настраиваемый таймер и удобное управление.",
     type: "website",
     locale: "ru_RU",
     siteName: "LotoCroot",
