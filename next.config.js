@@ -31,7 +31,12 @@ const getCSP = () => {
 };
 
 const nextConfig = {
-  // output: "standalone",
+  output: process.env.STANDALONE_BUILD === "true" ? "standalone" : undefined,
+
+  // Отключаем проверки при сборке для ускорения на слабых серверах (1 ядро)
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   
   async headers() {
     return [

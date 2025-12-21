@@ -20,6 +20,7 @@ COPY . .
 
 # Отключаем телеметрию Next.js на этапе сборки
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV STANDALONE_BUILD=true
 
 # Сборка проекта
 RUN npm run build
