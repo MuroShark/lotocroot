@@ -6,6 +6,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_CLIENT_ID: ${NEXT_PUBLIC_CLIENT_ID}
+        NEXT_PUBLIC_REDIRECT_URI: ${NEXT_PUBLIC_REDIRECT_URI}
+        NEXT_PUBLIC_TWITCH_CLIENT_ID: ${NEXT_PUBLIC_TWITCH_CLIENT_ID}
+        NEXT_PUBLIC_TWITCH_REDIRECT_URI: ${NEXT_PUBLIC_TWITCH_REDIRECT_URI}
     restart: always
     ports:
       - "3000:3000"
