@@ -123,18 +123,18 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
           onClick={onLogin}
           disabled={isLoggingIn || isDisabled}
           className={`
-            relative h-7 cursor-pointer rounded border border-[var(--border-color)] bg-transparent px-3 text-[11px] font-bold uppercase tracking-wider text-[var(--primary)] 
+            relative h-7 min-w-[60px] cursor-pointer rounded border border-[var(--border-color)] bg-transparent px-3 text-[11px] font-bold uppercase tracking-wider text-[var(--primary)] 
             transition-all duration-200 
             hover:border-[var(--primary)] hover:bg-[var(--primary)] hover:text-white hover:shadow-[0_2px_8px_rgba(145,71,255,0.3)]
             ${isDisabled ? 'disabled:cursor-not-allowed disabled:opacity-50' : 'disabled:cursor-wait disabled:opacity-80'}
-            ${isLoggingIn ? 'text-transparent' : ''}
           `}
         >
-          Войти
-          {isLoggingIn && (
+          {isLoggingIn ? (
              <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                <span className="block h-3.5 w-3.5 animate-spin rounded-full border-2 border-white border-t-transparent"></span>
+                <span className="block h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-t-transparent"></span>
              </span>
+          ) : (
+             "Войти"
           )}
         </button>
       )}
