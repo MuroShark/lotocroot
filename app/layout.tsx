@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google"; 
 import "./globals.css";
 import { SideNav } from "@/widgets/SideNav";
 import { Toaster } from "@/shared/ui/Toast/Toaster";
@@ -18,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://lotocroot.com'),
+  metadataBase: new URL('https://lotocroot.ru'),
   title: "LotoCroot",
   description: "Интерактивный аукцион и Колесо Удачи для стримеров с интеграцией DonationAlerts, Twitch и DonatePay. Удобное управление лотами, таймер и автоматическое продление времени.",
   keywords: ["PointAuc", "point auk", "point auc", "ПоинтАук", "поинт аук", "аукцион для стримеров", "рулетка", "колесо удачи", "DonationAlerts", "Twitch", "DonatePay", "интерактив", "сбор средств", "LotoCroot", "альтернатива pointauc"],
