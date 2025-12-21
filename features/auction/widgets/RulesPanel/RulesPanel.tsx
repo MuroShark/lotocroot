@@ -2,12 +2,13 @@
 "use client";
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { 
   CaretDown, Plus, X, ArrowUUpLeft, ArrowUUpRight, 
   TextB, TextItalic, TextUnderline, TextStrikethrough, 
   TextAUnderline, Highlighter, Minus, 
   TextAlignLeft, TextAlignCenter, TextAlignRight, 
-  ListBullets, ListNumbers 
+  ListBullets, ListNumbers, FloppyDisk
 } from '@phosphor-icons/react';
 
 // Типы для пресетов
@@ -22,6 +23,7 @@ export const RulesPanel: React.FC = () => {
   const panelRef = useRef<HTMLDivElement>(null); 
   const contentRef = useRef<HTMLDivElement>(null);
   const presetWrapperRef = useRef<HTMLDivElement>(null);
+  const floatingToolbarRef = useRef<HTMLDivElement>(null);
 
   // --- STATE ---
   const [isEditing, setIsEditing] = useState(false);
@@ -35,15 +37,32 @@ export const RulesPanel: React.FC = () => {
   // Пресеты
   const [presets, setPresets] = useState<RulesPreset[]>([]);
   const [isPresetMenuOpen, setIsPresetMenuOpen] = useState(false);
+  const [currentPresetId, setCurrentPresetId] = useState<string | null>(null);
   
   // Форматирование
   const [activeFormats, setActiveFormats] = useState<string[]>([]);
   const [fontSize, setFontSize] = useState(14);
   const savedRange = useRef<Range | null>(null);
 
+  // Floating Toolbar State
+  const [toolbarPos, setToolbarPos] = useState<{ top: number; left: number } | null>(null);
+  const [showFloatingBar, setShowFloatingBar] = useState(false);
+
   // Используем ref для title, чтобы не пересоздавать слушатель событий при каждом нажатии клавиши
   const titleRef = useRef(title);
   useEffect(() => { titleRef.current = title; }, [title]);
+  const currentPresetIdRef = useRef(currentPresetId);
+  useEffect(() => { currentPresetIdRef.current = currentPresetId; }, [currentPresetId]);
+
+  // --- ACTIONS (Moved up for usage in effects) ---
+  const saveCurrentState = useCallback(() => {
+    if (!contentRef.current) return;
+    localStorage.setItem('auction_rules_current', JSON.stringify({
+      content: contentRef.current.innerHTML,
+      title: titleRef.current, // Используем ref для актуальности внутри замыканий
+      presetId: currentPresetIdRef.current
+    }));
+  }, []);
 
   // --- CLICK LISTENERS ---
   useEffect(() => {
@@ -57,13 +76,13 @@ export const RulesPanel: React.FC = () => {
 
       // Выход из режима редактирования при клике вне панели
       if (isEditing && panelRef.current && !panelRef.current.contains(target)) {
-        setIsEditing(false);
-        if (contentRef.current) {
-            localStorage.setItem('auction_rules_current', JSON.stringify({
-                content: contentRef.current.innerHTML,
-                title: titleRef.current // Используем ref
-            }));
+        // Если клик был по плавающему тулбару — не выходим
+        if (floatingToolbarRef.current && floatingToolbarRef.current.contains(target)) {
+          return;
         }
+        setIsEditing(false);
+        setShowFloatingBar(false);
+        saveCurrentState();
       }
     }
 
@@ -71,7 +90,7 @@ export const RulesPanel: React.FC = () => {
     return () => {
       document.removeEventListener("mousedown", handleGlobalClick);
     };
-  }, [isEditing, isPresetMenuOpen]); // title убран из зависимостей
+  }, [isEditing, isPresetMenuOpen, saveCurrentState]);
 
 
   // --- INIT DATA (ЗДЕСЬ ВСТАВЛЕН НОВЫЙ ШАБЛОН) ---
@@ -87,6 +106,7 @@ export const RulesPanel: React.FC = () => {
           setHistoryIndex(0);
         }
         if (data.title) setTitle(data.title);
+        if (data.presetId) setCurrentPresetId(data.presetId);
       } catch (e) { console.error(e); }
     } else {
       // ЕСЛИ СОХРАНЕНИЙ НЕТ — ЗАГРУЖАЕМ ШАБЛОН ИЗ HTML
@@ -127,15 +147,6 @@ export const RulesPanel: React.FC = () => {
       } catch (e) {}
     }
   }, []);
-
-  // --- ACTIONS ---
-  const saveCurrentState = useCallback(() => {
-    if (!contentRef.current) return;
-    localStorage.setItem('auction_rules_current', JSON.stringify({
-      content: contentRef.current.innerHTML,
-      title: title
-    }));
-  }, [title]);
 
   const recordHistory = useCallback(() => {
     if (!contentRef.current) return;
@@ -247,19 +258,73 @@ export const RulesPanel: React.FC = () => {
     }
   };
 
+  // --- FLOATING TOOLBAR LOGIC ---
+  useEffect(() => {
+    const handleSelectionChange = () => {
+      if (!isEditing) return;
+
+      const selection = window.getSelection();
+      if (!selection || selection.isCollapsed || selection.rangeCount === 0) {
+        setShowFloatingBar(false);
+        return;
+      }
+
+      const range = selection.getRangeAt(0);
+      if (contentRef.current && !contentRef.current.contains(range.commonAncestorContainer)) {
+        setShowFloatingBar(false);
+        return;
+      }
+
+      const rect = range.getBoundingClientRect();
+      if (rect.width === 0 && rect.height === 0) return;
+
+      setToolbarPos({
+        top: rect.top,
+        left: rect.left + rect.width / 2
+      });
+      setShowFloatingBar(true);
+      updateToolbarState();
+    };
+
+    document.addEventListener('selectionchange', handleSelectionChange);
+    window.addEventListener('scroll', handleSelectionChange, true);
+    window.addEventListener('resize', handleSelectionChange);
+    return () => {
+      document.removeEventListener('selectionchange', handleSelectionChange);
+      window.removeEventListener('scroll', handleSelectionChange, true);
+      window.removeEventListener('resize', handleSelectionChange);
+    };
+  }, [isEditing]);
+
   // Preset CRUD
   const savePreset = () => {
     if (!contentRef.current) return;
-    const newPreset: RulesPreset = { id: Date.now().toString(), name: title || "Без названия", content: contentRef.current.innerHTML };
+    const newId = Date.now().toString();
+    const newPreset: RulesPreset = { id: newId, name: title || "Без названия", content: contentRef.current.innerHTML };
     const newPresets = [...presets, newPreset];
     setPresets(newPresets);
+    setCurrentPresetId(newId);
     localStorage.setItem('auction_rules_presets', JSON.stringify(newPresets));
     setIsPresetMenuOpen(false);
   };
+
+  const updatePreset = () => {
+    if (!contentRef.current || !currentPresetId) return;
+    const updatedPresets = presets.map(p => 
+      p.id === currentPresetId 
+        ? { ...p, name: title || "Без названия", content: contentRef.current!.innerHTML }
+        : p
+    );
+    setPresets(updatedPresets);
+    localStorage.setItem('auction_rules_presets', JSON.stringify(updatedPresets));
+    setIsPresetMenuOpen(false);
+  };
+
   const loadPreset = (preset: RulesPreset) => {
     if (!contentRef.current) return;
     contentRef.current.innerHTML = preset.content;
     setTitle(preset.name);
+    setCurrentPresetId(preset.id);
     recordHistory();
     setIsPresetMenuOpen(false);
   };
@@ -267,28 +332,30 @@ export const RulesPanel: React.FC = () => {
     e.stopPropagation();
     const newPresets = presets.filter(p => p.id !== id);
     setPresets(newPresets);
+    if (currentPresetId === id) setCurrentPresetId(null);
     localStorage.setItem('auction_rules_presets', JSON.stringify(newPresets));
   };
 
   // --- STYLES ---
-  const btnBase = "h-7 w-7 flex items-center justify-center rounded text-[#aaa] transition-colors hover:bg-[#333] hover:text-white relative";
+  const btnBase = "h-7 w-7 flex items-center justify-center rounded text-[#aaa] transition-colors hover:bg-white/10 hover:text-white relative";
   const btnActive = "bg-[rgba(145,71,255,0.2)] text-[#9147ff] border border-[rgba(145,71,255,0.3)]";
   const getBtnClass = (cmd: string) => `${btnBase} ${activeFormats.includes(cmd) ? btnActive : ''}`;
 
   return (
     <div ref={panelRef} className="flex h-full w-full flex-col bg-[#111] border-r border-[#27272a] transition-colors duration-300">
       
-      {/* --- HEADER --- */}
-      <header 
-        className={`flex shrink-0 items-center justify-between border-b border-[#27272a] bg-[#18181b] px-4 transition-all duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] relative 
-        ${isEditing ? 'h-[50px] opacity-100 overflow-visible z-20' : 'h-0 opacity-0 overflow-hidden z-0 pointer-events-none'}`}
+      {/* --- FIXED TOP CONTROLS --- */}
+      <div 
+        className={`flex flex-col shrink-0 border-b border-[#27272a] bg-[#18181b] transition-all duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)] relative z-20
+        ${isEditing ? 'h-[80px] opacity-100 overflow-visible' : 'h-0 opacity-0 overflow-hidden pointer-events-none'}`}
       >
-        <div className="flex flex-1 items-center gap-2">
+        {/* Row 1: Title, Undo/Redo, Presets */}
+        <div className="flex h-[40px] items-center gap-2 px-4 border-b border-[#27272a]/50">
           <input
             type="text"
             value={title}
             onChange={(e) => { setTitle(e.target.value); saveCurrentState(); }}
-            className="w-full bg-transparent text-[14px] font-bold text-white outline-none placeholder:text-[#555] focus:border-b focus:border-[var(--primary)] transition-colors"
+            className="min-w-[40px] flex-1 bg-transparent text-[14px] font-bold text-white outline-none placeholder:text-[#555] focus:border-b focus:border-[var(--primary)] transition-colors truncate"
             placeholder="Название правил..."
           />
           
@@ -306,55 +373,57 @@ export const RulesPanel: React.FC = () => {
                  <div className="h-px bg-[#333] my-1" />
                  {presets.length === 0 && <div className="px-2 py-2 text-center text-[11px] text-[#555]">Нет пресетов</div>}
                  <div className="flex flex-col gap-0.5 max-h-[200px] overflow-y-auto customScrollbar">
-                   {presets.map(preset => (
-                     <div key={preset.id} className="group flex items-center justify-between rounded px-2 py-1.5 text-[12px] text-[#e4e4e7] hover:bg-[#27272a] cursor-pointer" onClick={() => loadPreset(preset)}>
-                        <span className="truncate max-w-[150px]">{preset.name}</span>
-                        <button onClick={(e) => deletePreset(e, preset.id)} className="hidden group-hover:flex h-5 w-5 items-center justify-center rounded text-[#71717a] hover:bg-[#ef4444] hover:text-white"><X weight="bold" className="text-[10px]" /></button>
-                     </div>
-                   ))}
+                   {presets.map(preset => {
+                     const isCurrent = preset.id === currentPresetId;
+                     return (
+                       <div 
+                         key={preset.id} 
+                         className={`group flex items-center justify-between rounded px-2 py-1.5 text-[12px] cursor-pointer transition-colors ${isCurrent ? 'bg-[rgba(145,71,255,0.15)] text-white' : 'text-[#e4e4e7] hover:bg-[#27272a]'}`} 
+                         onClick={() => loadPreset(preset)}
+                       >
+                          <span className="truncate max-w-[120px]">{preset.name}</span>
+                          <div className="flex items-center gap-1">
+                            {isCurrent && (
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); updatePreset(); }} 
+                                className="flex h-5 w-5 items-center justify-center rounded text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white transition-colors"
+                                title="Сохранить изменения"
+                              >
+                                <FloppyDisk weight="bold" className="text-[12px]" />
+                              </button>
+                            )}
+                            <button 
+                              onClick={(e) => deletePreset(e, preset.id)} 
+                              className={`flex h-5 w-5 items-center justify-center rounded transition-colors ${isCurrent ? 'text-white/50 hover:bg-[#ef4444] hover:text-white' : 'hidden group-hover:flex text-[#71717a] hover:bg-[#ef4444] hover:text-white'}`}
+                            >
+                              <X weight="bold" className="text-[10px]" />
+                            </button>
+                          </div>
+                       </div>
+                     );
+                   })}
                  </div>
               </div>
             )}
           </div>
         </div>
-      </header>
 
-      {/* --- TOOLBAR --- */}
-      <div className={`flex flex-wrap items-center gap-1.5 border-b border-[#333] bg-[#202024] transition-all duration-300 ease-in-out overflow-hidden relative z-10 
-        ${isEditing ? 'opacity-100 max-h-[100px] p-2' : 'opacity-0 max-h-0 py-0 border-b-0 pointer-events-none'}`}>
-        <div className="flex items-center gap-0.5 border-r border-[#333] pr-2 mr-0.5">
-          <button onClick={undo} disabled={historyIndex <= 0} className={`${btnBase} disabled:opacity-30 disabled:hover:bg-transparent`}><ArrowUUpLeft weight="bold" /></button>
-          <button onClick={redo} disabled={historyIndex >= historyStack.length - 1} className={`${btnBase} disabled:opacity-30 disabled:hover:bg-transparent`}><ArrowUUpRight weight="bold" /></button>
-        </div>
-        <div className="flex items-center gap-0.5 border-r border-[#333] pr-2 mr-0.5">
-          <button onClick={() => execCmd('bold')} className={getBtnClass('bold')}><TextB weight="bold" /></button>
-          <button onClick={() => execCmd('italic')} className={getBtnClass('italic')}><TextItalic weight="bold" /></button>
-          <button onClick={() => execCmd('underline')} className={getBtnClass('underline')}><TextUnderline weight="bold" /></button>
-          <button onClick={() => execCmd('strikeThrough')} className={getBtnClass('strikeThrough')}><TextStrikethrough weight="bold" /></button>
-        </div>
-        <div className="flex items-center gap-0.5 border-r border-[#333] pr-2 mr-0.5">
-           <div className={`${btnBase} overflow-hidden`}>
-             <TextAUnderline weight="bold" className="z-10 pointer-events-none" />
-             <input type="color" className="absolute inset-0 h-full w-full opacity-0 cursor-pointer z-20" onMouseDown={saveSelection} onChange={(e) => applyColor('foreColor', e.target.value)} />
-           </div>
-           <div className={`${btnBase} overflow-hidden`}>
-             <Highlighter weight="bold" className="z-10 pointer-events-none" />
-             <input type="color" className="absolute inset-0 h-full w-full opacity-0 cursor-pointer z-20" onMouseDown={saveSelection} onChange={(e) => applyColor('hiliteColor', e.target.value)} />
-           </div>
-        </div>
-        <div className="flex items-center gap-0.5 border-r border-[#333] pr-2 mr-0.5">
-          <button onClick={() => adjustFontSize(-2)} className={btnBase}><Minus weight="bold" /></button>
-          <div className="flex h-6 w-8 items-center justify-center rounded border border-[#333] bg-[#111] text-[11px] font-mono text-white">{fontSize}</div>
-          <button onClick={() => adjustFontSize(2)} className={btnBase}><Plus weight="bold" /></button>
-        </div>
-        <div className="flex items-center gap-0.5 border-r border-[#333] pr-2 mr-0.5">
-          <button onClick={() => execCmd('justifyLeft')} className={getBtnClass('justifyLeft')}><TextAlignLeft weight="bold" /></button>
-          <button onClick={() => execCmd('justifyCenter')} className={getBtnClass('justifyCenter')}><TextAlignCenter weight="bold" /></button>
-          <button onClick={() => execCmd('justifyRight')} className={getBtnClass('justifyRight')}><TextAlignRight weight="bold" /></button>
-        </div>
-        <div className="flex items-center gap-0.5">
-          <button onClick={() => execCmd('insertUnorderedList')} className={getBtnClass('insertUnorderedList')}><ListBullets weight="bold" /></button>
-          <button onClick={() => execCmd('insertOrderedList')} className={getBtnClass('insertOrderedList')}><ListNumbers weight="bold" /></button>
+        {/* Row 2: Paragraph Controls */}
+        <div className="flex h-[40px] items-center gap-2 px-4 bg-[#141416]">
+          <div className="flex items-center gap-0.5 border-r border-[#333] pr-2 mr-0.5">
+            <button onClick={undo} disabled={historyIndex <= 0} className={`${btnBase} disabled:opacity-30 disabled:hover:bg-transparent`}><ArrowUUpLeft weight="bold" /></button>
+            <button onClick={redo} disabled={historyIndex >= historyStack.length - 1} className={`${btnBase} disabled:opacity-30 disabled:hover:bg-transparent`}><ArrowUUpRight weight="bold" /></button>
+          </div>
+
+          <div className="flex items-center gap-0.5 border-r border-[#333] pr-2 mr-0.5">
+            <button onClick={() => execCmd('justifyLeft')} className={getBtnClass('justifyLeft')}><TextAlignLeft weight="bold" /></button>
+            <button onClick={() => execCmd('justifyCenter')} className={getBtnClass('justifyCenter')}><TextAlignCenter weight="bold" /></button>
+            <button onClick={() => execCmd('justifyRight')} className={getBtnClass('justifyRight')}><TextAlignRight weight="bold" /></button>
+          </div>
+          <div className="flex items-center gap-0.5">
+            <button onClick={() => execCmd('insertUnorderedList')} className={getBtnClass('insertUnorderedList')}><ListBullets weight="bold" /></button>
+            <button onClick={() => execCmd('insertOrderedList')} className={getBtnClass('insertOrderedList')}><ListNumbers weight="bold" /></button>
+          </div>
         </div>
       </div>
 
@@ -378,6 +447,47 @@ export const RulesPanel: React.FC = () => {
         }}
         style={{ fontFamily: 'Inter, sans-serif' }}
       />
+
+      {/* --- FLOATING TOOLBAR (PORTAL) --- */}
+      {showFloatingBar && toolbarPos && createPortal(
+        <div 
+          ref={floatingToolbarRef}
+          className="fixed z-[9999] flex flex-col gap-1 rounded-lg border border-[#333] bg-[#18181b]/95 backdrop-blur-md p-1.5 shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+          style={{ 
+            top: toolbarPos.top, 
+            left: toolbarPos.left, 
+            transform: 'translate(-50%, -100%) translateY(-12px)' 
+          }}
+          onMouseDown={(e) => e.preventDefault()} // Prevent focus loss
+        >
+          {/* Row 1: Formatting & Colors */}
+          <div className="flex items-center gap-1">
+            <button onClick={() => execCmd('bold')} className={getBtnClass('bold')}><TextB weight="bold" /></button>
+            <button onClick={() => execCmd('italic')} className={getBtnClass('italic')}><TextItalic weight="bold" /></button>
+            <button onClick={() => execCmd('underline')} className={getBtnClass('underline')}><TextUnderline weight="bold" /></button>
+            <button onClick={() => execCmd('strikeThrough')} className={getBtnClass('strikeThrough')}><TextStrikethrough weight="bold" /></button>
+            <div className="w-px h-4 bg-white/10 mx-0.5" />
+            <div className={`${btnBase} overflow-hidden`}>
+              <TextAUnderline weight="bold" className="z-10 pointer-events-none" />
+              <input type="color" className="absolute inset-0 h-full w-full opacity-0 cursor-pointer z-20" onMouseDown={saveSelection} onChange={(e) => applyColor('foreColor', e.target.value)} />
+            </div>
+            <div className={`${btnBase} overflow-hidden`}>
+              <Highlighter weight="bold" className="z-10 pointer-events-none" />
+              <input type="color" className="absolute inset-0 h-full w-full opacity-0 cursor-pointer z-20" onMouseDown={saveSelection} onChange={(e) => applyColor('hiliteColor', e.target.value)} />
+            </div>
+            <div className="w-px h-4 bg-white/10 mx-0.5" />
+            <div className="flex items-center gap-0.5">
+              <button onClick={() => adjustFontSize(-2)} className={btnBase}><Minus weight="bold" /></button>
+              <div className="flex h-6 w-7 items-center justify-center rounded bg-white/5 text-[10px] font-mono text-white">{fontSize}</div>
+              <button onClick={() => adjustFontSize(2)} className={btnBase}><Plus weight="bold" /></button>
+            </div>
+          </div>
+
+          {/* Arrow indicator */}
+          <div className="absolute bottom-0 left-1/2 h-2 w-2 -translate-x-1/2 translate-y-1/2 rotate-45 border-b border-r border-[#333] bg-[#18181b]"></div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 };
