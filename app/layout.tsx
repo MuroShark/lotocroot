@@ -21,7 +21,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "LotoCroot",
   description: "Интерактивный аукцион и Колесо Удачи для стримеров с интеграцией DonationAlerts, Twitch и DonatePay. Удобное управление лотами, таймер и автоматическое продление времени.",
-  keywords: ["PointAuc", "ПоинтАук", "аукцион для стримеров", "рулетка", "колесо удачи", "DonationAlerts", "Twitch", "DonatePay", "интерактив", "сбор средств", "LotoCroot", "альтернатива pointauc"],
+  keywords: ["PointAuc", "point auk", "point auc", "ПоинтАук", "поинт аук", "аукцион для стримеров", "рулетка", "колесо удачи", "DonationAlerts", "Twitch", "DonatePay", "интерактив", "сбор средств", "LotoCroot", "альтернатива pointauc"],
   authors: [{ name: "MuroShark" }],
   creator: "MuroShark",
   openGraph: {
@@ -34,6 +34,11 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
+  },
+  icons: {
+    icon: "/roulette/LotoCroot_iconFull.png",
+    shortcut: "/roulette/LotoCroot_iconFull.png",
+    apple: "/roulette/LotoCroot_iconFull.png",
   },
 };
 

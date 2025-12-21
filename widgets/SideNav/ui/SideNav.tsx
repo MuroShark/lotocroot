@@ -1,15 +1,15 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 // Импортируем иконки как компоненты
 import { 
-  Gavel, 
   ListDashes, 
   Spinner, 
   Gear, 
   Bug, 
-  GithubLogo 
+  GithubLogo
 } from '@phosphor-icons/react';
 
 interface SideNavProps {
@@ -34,12 +34,17 @@ export const SideNav: React.FC<SideNavProps> = ({ className }) => {
       {/* Логотип */}
       <Link 
         href="/" 
-        className="mb-8 flex h-10 w-10 items-center justify-center text-[#9147ff] transition hover:[text-shadow:0_0_15px_rgba(145,71,255,0.4)]" 
+        className="mb-8 flex h-10 w-10 items-center justify-center transition hover:drop-shadow-[0_0_10px_rgba(145,71,255,0.5)]" 
         title="Auction Ultimate"
       >
-        {/* Было: <i className="ph-bold ph-gavel"></i> */}
-        {/* Стало: Компонент с весом bold и размером 26px (как в CSS) */}
-        <Gavel size={26} weight="bold" />
+        <Image 
+          src="/roulette/LotoCroot_Icon.png" 
+          alt="LotoCroot" 
+          width={32} 
+          height={32} 
+          className="object-contain"
+          priority
+        />
       </Link>
 
       {/* Ссылки навигации */}
@@ -61,6 +66,24 @@ export const SideNav: React.FC<SideNavProps> = ({ className }) => {
 
       {/* Внешние ссылки */}
       <div className="mt-auto flex flex-col items-center">
+        <Link 
+          href="https://boosty.to/muroshark/donate" 
+          target="_blank"
+          rel="noopener noreferrer"
+          className={getNavClass('boosty')} 
+          title="Поддержать на Boosty"
+        >
+          <Image 
+            src="/roulette/boosty/Color.svg" 
+            alt="Boosty" 
+            width={22} 
+            height={22}
+            className="object-contain"
+            priority
+            unoptimized
+          />
+        </Link>
+
         <Link 
           href="https://github.com/MuroShark/lotocroot/issues" 
           target="_blank"
