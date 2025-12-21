@@ -13,7 +13,7 @@
   "scripts": {
     "dev": "next dev",
     "dev2": "node --trace-deprecation node_modules/next/dist/bin/next dev",
-    "build": "next build --no-lint",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint",
     "test": "jest --watch"
