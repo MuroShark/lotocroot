@@ -49,7 +49,12 @@ export const useLotsStore = create<LotsState>()(subscribeWithSelector(persist(
       if (newLots.length === 0) {
         set(state => ({ lots: [createLotObject(state.nextLotId, '', null, true)], nextLotId: state.nextLotId + 1 }));
       } else {
-        set({ lots: sortLots(newLots) });
+        // Обновляем nextLotId, чтобы новые лоты не конфликтовали с загруженными по ID
+        const maxId = newLots.reduce((max, lot) => Math.max(max, lot.id), 0);
+        set(state => ({ 
+          lots: sortLots(newLots),
+          nextLotId: Math.max(state.nextLotId, maxId + 1)
+        }));
       }
     },
 

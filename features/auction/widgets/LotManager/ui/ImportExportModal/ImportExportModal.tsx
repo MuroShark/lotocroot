@@ -34,10 +34,25 @@ export const ImportExportModal: React.FC<ImportExportModalProps> = ({ isOpen, on
         if (typeof result === 'string') {
           const importedData = JSON.parse(result);
           // Простая валидация
-          // Теперь поддерживаем файлы без явного поля name (например, из PointAuc), используя имя файла
           if (importedData && Array.isArray(importedData.lots)) {
             const name = importedData.name || file.name.replace(/\.json$/i, '');
-            importProfile({ name, lots: importedData.lots });
+            
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const normalizedLots = importedData.lots.map((lot: any, index: number) => {
+              const content = lot.content ?? lot.name ?? '';
+              const amount = lot.amount ?? null;
+              const isPlaceholder = content.trim() === '' && (amount === 0 || amount === null);
+              
+              return {
+                ...lot,
+                id: lot.id ?? (index + 1),
+                content,
+                amount,
+                isPlaceholder
+              };
+            });
+
+            importProfile({ name, lots: normalizedLots });
           } else {
             alert('Ошибка: Неверный формат файла сохранения.');
           }
