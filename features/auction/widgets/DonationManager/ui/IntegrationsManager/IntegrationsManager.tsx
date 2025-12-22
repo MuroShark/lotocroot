@@ -263,7 +263,7 @@ const IntegrationsManagerComponent: React.FC<IntegrationsManagerProps> = ({ onOp
           `} />
         </div>
         
-        {!isCompact && <span className="hidden md:inline text-[12px] font-semibold uppercase tracking-wider">Connections</span>}
+        {!isCompact && <span className="hidden md:inline text-[12px] font-semibold uppercase tracking-wider">Интеграции</span>}
         
         <span className={`
           flex h-5 min-w-[20px] items-center justify-center rounded px-1.5 font-mono text-[10px] font-bold transition-colors duration-200
